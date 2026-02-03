@@ -15,4 +15,9 @@ class Product extends Model
         'stock',
         'type',
     ];
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }
