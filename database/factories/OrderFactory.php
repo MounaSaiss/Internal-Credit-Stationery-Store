@@ -19,8 +19,6 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => \App\Models\User::inRandomOrder()->first()->id,
-            'product_id' => \App\Models\Product::inRandomOrder()->first()->id,
-            'status'=> fake()->randomElement(['waiting','valide']),
         ];
     }
 }
