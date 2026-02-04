@@ -23,7 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'token',
-        'departement',
+        'department',
     ];
 
     public function orders()
