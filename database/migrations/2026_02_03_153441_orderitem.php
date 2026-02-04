@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['waiting', 'valide', 'rejected'])->default('waiting');
+            $table->enum('status', ['waiting', 'valid', 'rejected'])->default('waiting');
             $table->unsignedInteger('quantity')->default(1);
             $table->unsignedInteger('token_price');
             $table->timestamps();

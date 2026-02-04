@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,10 +13,11 @@ class UserController extends Controller
      */
     public function profile(request $request)
     {
-        $userId = request('userId');
-        $user = User::find($userId);
-        $oders = $user->orders;
-        return view('user-profile', compact('user'));
+        $username = request('username');
+        $user = User::firstWhere('name', $username);
+        $orders = Order::with(['items.product'])->where('user_id',$user->id)->get();
+        return view('user-profile', compact('user','orders'));
+
     }
 
     /**

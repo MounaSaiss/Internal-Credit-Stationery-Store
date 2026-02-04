@@ -20,7 +20,7 @@ class OrderItemFactory extends Factory
         $order = Order::inRandomOrder()->first();
         $product = Product::inRandomOrder()->first();
 
-        $status = $product->type === 'premium' ? 'waiting' : 'valide';
+        $status = $product->type === 'premium' ? 'waiting' : 'valid';
 
         return [
             'order_id'     => $order ? $order->id : Order::factory(),

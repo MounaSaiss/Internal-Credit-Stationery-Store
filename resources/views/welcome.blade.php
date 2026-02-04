@@ -1,19 +1,4 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TechCorp - Boutique Interne</title>
-
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="antialiased bg-gray-50 text-gray-800 font-figtree">
-
+<x-layout title="Welcome">
     <div
         class="relative min-h-screen flex flex-col justify-center items-center selection:bg-blue-500 selection:text-white">
 
@@ -123,6 +108,4 @@
             </div>
         </div>
     </div>
-</body>
-
-</html>
+</x-layout>

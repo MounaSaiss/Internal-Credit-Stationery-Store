@@ -15,6 +15,7 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                        <a href="{{ route('user.profile',['username' => Auth::user()->name]) }}">my profile</a>
                 </div>
             </div>
         </div>
