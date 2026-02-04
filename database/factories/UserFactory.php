@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'role'=> fake()->randomElement(['employee', 'manager','admin']),
             'token'=>fake()->numberBetween(0 , 1000),
-            'departement' => fake()->sentence(),
+            'department' => fake()->sentence(),
         ];
     }
 
