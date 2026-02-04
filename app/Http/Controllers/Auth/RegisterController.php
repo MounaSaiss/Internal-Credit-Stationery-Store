@@ -52,6 +52,21 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'string'],
+            'department' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) use ($data) {
+                    if (isset($data['role']) && $data['role'] === 'manager') {
+                        $managerExist = User::where('role', 'manager')
+                            ->where('department', $value)
+                            ->exists();
+                        if ($managerExist) {
+                            $fail("Le département " . ucfirst($value) . "a déjà un manager assigné.");
+                        }
+                    }
+                },
+            ],
         ]);
     }
 
@@ -67,6 +82,8 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => $data['role'],
+            'department' => $data['department'],
         ]);
     }
 }
