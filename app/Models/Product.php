@@ -16,3 +16,14 @@ class Product extends Model
         'type',
     ];
 }
+
+
+
+
+
+
+
+
+
+
+
