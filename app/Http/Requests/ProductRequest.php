@@ -25,7 +25,7 @@ class ProductRequest extends FormRequest
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'price'       => 'required|numeric|min:0',
+            'price'       => 'required|numeric|min:0|max:1000',
             'stock'       => 'required|integer|min:0',
             'type'        => 'required|in:premium,standard',
         ];
@@ -36,6 +36,7 @@ class ProductRequest extends FormRequest
             'name.required'  => 'Product name is required',
             'price.required' => 'Price is required',
             'price.numeric'  => 'Price must be a number',
+            'price.max'       => 'Price cannot exceed 1000 tokens',
             'stock.integer'  => 'Stock must be an integer',
             'type.in'        => 'Type must be premium or standard',
         ];

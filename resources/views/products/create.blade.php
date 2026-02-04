@@ -49,7 +49,7 @@
 
             {{-- Price --}}
             <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2">Price (MAD)</label>
+                <label class="block text-gray-700 font-bold mb-2">Price (Tokens)</label>
                 <input type="number" step="0.01" name="price" value="{{ old('price') }}"
                     class="w-full p-2 border border-gray-300 rounded" required>
             </div>
