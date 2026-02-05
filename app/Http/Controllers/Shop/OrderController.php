@@ -67,6 +67,7 @@ class OrderController extends Controller
                         'user_id' => $user->id,
                         'total_price' => $stdOrderTotal,
                         'status' => 'approved',
+                        'code' => 'ORD-' . mt_rand(10000000, 99999999),
                     ]);
                     foreach ($standardItems as $item) {
                         $this->createOrderItem($order1->id, $item);
@@ -79,6 +80,7 @@ class OrderController extends Controller
                         'user_id' => $user->id,
                         'total_price' => $prmOrderTotal,
                         'status' => 'pending',
+                        'code' => 'ORD-' . mt_rand(10000000, 99999999),
                     ]);
 
                     foreach ($premiumItems as $item) {
