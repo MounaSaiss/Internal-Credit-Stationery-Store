@@ -58,8 +58,7 @@ class OrderController extends Controller
                     throw new \Exception("Solde insuffisant ! Il vous manque des tokens.");
                 }
 
-                $user->token -= $totalCost;
-                $user->save();
+                $user->decrement('token', $totalCost);
 
                 if (!empty($standardItems)) {
                     $stdOrderTotal = array_sum(array_column($standardItems, 'total'));
