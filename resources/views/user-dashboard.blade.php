@@ -1,3 +1,13 @@
+@php
+    $cart = session('cart', []);
+    $cartTotal = 0;
+    foreach ($cart as $item) {
+        $cartTotal += $item['price'] * $item['quantity'];
+    }
+
+    $remainingBalance = auth()->user()->token - $cartTotal;
+    $cartCount = count($cart);
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -135,54 +145,74 @@
     <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
+
                 <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                        <span class="ml-2 text-xl font-bold text-gray-900">TechCorp Store</span>
+                    <div class="flex-shrink-0 flex items-center gap-3 mr-8">
+                        <div class="h-9 w-9 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                            <span class="text-white font-bold text-lg">T</span>
+                        </div>
+                        <span class="font-bold text-xl text-gray-900 tracking-tight">TechCorp <span class="text-blue-600">Store</span></span>
                     </div>
-                    <div class="hidden md:ml-10 md:flex md:space-x-8">
-                        <a href="#"
-                            class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+
+                    <div class="hidden md:flex md:space-x-8">
+                        <a href="#" class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
                             Dashboard
                         </a>
-                        <a href="#"
-                            class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                        <a href="#" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                             Shop
                         </a>
-                        <a href="#"
-                            class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                        <a href="#" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                             My Orders
                         </a>
                     </div>
                 </div>
+
                 <div class="flex items-center space-x-4">
-                    <button class="p-2 text-gray-400 hover:text-gray-500 relative">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+
+                    <div class="hidden lg:flex flex-col items-end border-r border-gray-200 pr-4">
+                        <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Solde Restant</span>
+                        <span class="font-bold {{ $remainingBalance <= 0 ? 'text-red-600' : 'text-blue-600' }} text-base leading-tight">
+                        {{ number_format($remainingBalance) }} <span class="text-xs opacity-70">Tks</span>
+                    </span>
+                    </div>
+
+
+                    <a href="{{ route('cart.index') }}" class="relative p-2 text-gray-400 hover:text-blue-600 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
-                        <span
-                            class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-                    </button>
-                    <div class="flex items-center space-x-3">
-                        <div
-                            class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-lg">
+                        @if ($cartCount > 0)
+                            <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
+                            {{ $cartCount }}
+                        </span>
+                        @endif
+                    </a>
+
+                    <div class="flex items-center pl-4 border-l border-gray-100 space-x-3">
+                        <div class="hidden md:flex flex-col items-end">
+                            <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}" class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
+                                {{ $user->name }}
+                            </a>
+                            <p class="text-[11px] text-gray-500">{{ $user->role }} • {{ $user->department }}</p>
+                        </div>
+                        <div class="bg-blue-600 text-white w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
                             {{ substr($user->name, 0, 1) }}
                         </div>
-                        <div class="hidden md:block">
-                            <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}"
-                                class="text-sm font-medium text-gray-900">{{ $user->name }}</a>
-                            <p class="text-xs text-gray-500">{{ $user->role }} · {{ $user->department }}</p>
-                        </div>
+
+                        <form method="POST" action="{{ route('logout') }}" class="ml-2">
+                            @csrf
+                            <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition" title="Déconnexion">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                            </button>
+                        </form>
                     </div>
+
                 </div>
             </div>
         </div>
     </nav>
-
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -215,7 +245,7 @@
                         </div>
                     </div>
                     <div class="flex space-x-4">
-                        <button onclick="location.href=''"
+                        <button onclick="location.href='{{ route('shop.index') }}'"
                             class="flex-1 bg-white text-purple-600 font-semibold py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors shadow-lg">
                             Shop Now
                         </button>

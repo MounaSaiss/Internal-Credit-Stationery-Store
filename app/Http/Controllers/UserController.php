@@ -27,7 +27,7 @@ class UserController extends Controller
         $username = request('username');
         $user = User::firstWhere('name', $username);
         $ordertotal = Order::where('user_id', $user->id)->count();
-//        $pendingOrders = Order::where('user_id', $user->id)->where('status', 'waiting')->count();
+        $pendingOrders = Order::where('user_id', $user->id)->where('status', 'waiting')->count();
         $pendingOrders = Order::where('user_id', $user->id)->count() - $ordertotal;
         $recentOrders = Order::where('user_id', $user->id)->with('items.product')->latest()->take(2)->get();
         return view('user-dashboard', compact('user', 'ordertotal', 'pendingOrders', 'recentOrders'));

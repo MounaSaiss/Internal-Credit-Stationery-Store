@@ -19,6 +19,9 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => \App\Models\User::inRandomOrder()->first()->id,
+            'total_price' => $this->faker->randomFloat(2, 20, 2000),
+            'code' => strtoupper($this->faker->bothify('ORD-#####')),
+            'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
         ];
     }
 }

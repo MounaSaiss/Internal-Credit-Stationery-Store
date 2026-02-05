@@ -20,13 +20,10 @@ class OrderItemFactory extends Factory
         $order = Order::inRandomOrder()->first();
         $product = Product::inRandomOrder()->first();
 
-        $status = $product->type === 'premium' ? 'waiting' : 'valid';
-
         return [
             'order_id'     => $order ? $order->id : Order::factory(),
             'product_id'   => $product ? $product->id : Product::factory(),
             'quantity'     => $this->faker->numberBetween(1, 5),
-            'status'       => $status,
             'token_price'  => $product ? $product->price : $this->faker->numberBetween(10, 100),
         ];
     }
