@@ -26,7 +26,6 @@ class OrderItemFactory extends Factory
             'order_id'     => $order ? $order->id : Order::factory(),
             'product_id'   => $product ? $product->id : Product::factory(),
             'quantity'     => $this->faker->numberBetween(1, 5),
-            'status'       => $status,
             'token_price'  => $product ? $product->price : $this->faker->numberBetween(10, 100),
         ];
     }

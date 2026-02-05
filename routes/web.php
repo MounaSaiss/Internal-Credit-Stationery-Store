@@ -38,4 +38,5 @@ Route::middleware(['auth', 'role:employee,manager,admin'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/store' , [OrderController::class , 'store'])->name('order.store');
+    Route::get('/shop/product/{id}', [ShopController::class, 'show'])->name('shop.show');
 });
