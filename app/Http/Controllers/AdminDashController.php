@@ -18,6 +18,8 @@ class AdminDashController extends Controller
 $ordersRow = [];
 
 foreach ($orders as $order) {
+    $userId = $order ->user->name;
+
     foreach ($order->items as $item) {
         $ordersRow [] = [
             'id'=>$order->user->id,
@@ -30,8 +32,11 @@ foreach ($orders as $order) {
         ];
     }
 }
+     return view ('dashboard' , compact('ordersRow'));
 
-         return view ('dashboard' , compact('ordersRow'));
     }
 
 }
+
+
+   
