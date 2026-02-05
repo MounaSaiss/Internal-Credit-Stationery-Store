@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Manager\OrderItemController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,3 +29,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/products/{id}/update', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}/delete', [ProductController::class, 'delete'])->name('products.destroy');
 });
+Route::get('/admin/orders/waiting', [OrderItemController::class, 'waiting'])
+    ->name('admin.orders.waiting');
+Route::patch('/orders/{orderItem}/refuse', [OrderItemController::class, 'refuseOrder'])
+    ->name('orders.refuse');
+Route::patch('/orders/{orderItem}/validate', [OrderItemController::class, 'validateOrder'])
+    ->name('orders.validate');
