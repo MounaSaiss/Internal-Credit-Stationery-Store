@@ -22,6 +22,7 @@ class CheckRole
         }
 
         $user = Auth::user();
+        // dd('My Role is: ' . $user->role, 'Allowed Roles are:', $roles);
 
         if (!in_array($user->role, $roles)) {
             abort(403, 'Accès interdit ! Vous n\'avez pas les permissions nécessaires.');
