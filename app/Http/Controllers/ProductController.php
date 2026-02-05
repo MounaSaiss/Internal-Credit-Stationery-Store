@@ -14,13 +14,14 @@ class ProductController extends Controller
         $products = Product::latest()->paginate(8);
         return view('products.index', compact('products'));
     }
+    
     public function create()
     {
         return view('products.create');
     }
     public function store(ProductRequest $request)
     {
-        $data = $request->validated(); //return array of validated data
+        $data = $request->validated(); 
         $imageName = time() . '.' . $request->image->extension();
         $request->image->move(public_path('images'), $imageName);
         $data['image'] = $imageName;
