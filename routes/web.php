@@ -11,6 +11,7 @@ Route::get('/', function () {
 });
 //we should separate the models to independent entities like Admin, Manager and Employee
 Route::get('/user/index', [UserController::class, 'profile'])->name('user.profile');
+Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
 
 Auth::routes();
 

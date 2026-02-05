@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -15,8 +16,21 @@ class UserController extends Controller
     {
         $username = request('username');
         $user = User::firstWhere('name', $username);
-        $orders = Order::with(['items.product'])->where('user_id',$user->id)->get();
-        return view('user-profile', compact('user','orders'));
+        $orders = Order::with(['items.product'])->where('user_id', $user->id)->get();
+
+        return view('user-profile', compact('user', 'orders'));
+
+    }
+
+    public function dashboard(request $request)
+    {
+        $username = request('username');
+        $user = User::firstWhere('name', $username);
+        $ordertotal = Order::where('user_id', $user->id)->count();
+//        $pendingOrders = Order::where('user_id', $user->id)->where('status', 'waiting')->count();
+        $pendingOrders = Order::where('user_id', $user->id)->count() - $ordertotal;
+        $recentOrders = Order::where('user_id', $user->id)->with('items.product')->latest()->take(2)->get();
+        return view('user-dashboard', compact('user', 'ordertotal', 'pendingOrders', 'recentOrders'));
 
     }
 
