@@ -19,9 +19,9 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-                'status' => 'approved',
-                'total_price' => fake()->numberBetween(50, 1000),
-                'code' => 'ORD-'.fake()->unique()->numberBetween(10000000, 999999999)
-            ];
+            'status' => 'approved',
+            'total_price' => fake()->numberBetween(50, 1000),
+            'code' => 'ORD-' . fake()->unique()->numberBetween(10000000, 999999999),
+        ];
     }
 }
