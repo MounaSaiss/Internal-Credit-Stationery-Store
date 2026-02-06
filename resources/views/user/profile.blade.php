@@ -299,7 +299,7 @@
                        class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         Shop
                     </a>
-                    <a href="#"
+                    <a href="{{ route('user.orders') }}"
                        class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         My Orders
                     </a>
@@ -525,134 +525,6 @@
     </div>
 
 </div>
-
-<script>
-    let currentSort = null;
-    let sortDirection = 'asc';
-
-    // Status priority for sorting
-    const statusPriority = {
-        'approved': 1,
-        'pending': 2,
-        'rejected': 3
-    };
-
-    // Search functionality
-    function filterProducts() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const rows = document.querySelectorAll('.product-row');
-        const noResults = document.getElementById('noResults');
-        let visibleCount = 0;
-
-        rows.forEach(row => {
-            const productName = row.getAttribute('data-name').toLowerCase();
-
-            if (productName.includes(searchTerm)) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        // Show/hide no results message with animation
-        if (visibleCount === 0 && rows.length > 0) {
-            noResults.classList.remove('hidden');
-            noResults.classList.add('show-animation');
-            setTimeout(() => noResults.classList.remove('show-animation'), 500);
-        } else {
-            noResults.classList.add('hidden');
-        }
-    }
-
-    // Sort functionality
-    function sortTable(column) {
-        const tbody = document.querySelector('#productsTable tbody');
-        const rows = Array.from(document.querySelectorAll('.product-row'));
-
-        // Toggle direction if clicking same column
-        if (currentSort === column) {
-            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            sortDirection = 'asc';
-            currentSort = column;
-        }
-
-        // Sort rows
-        rows.sort((a, b) => {
-            let aVal, bVal;
-
-            if (column === 'name') {
-                aVal = a.getAttribute('data-name').toLowerCase();
-                bVal = b.getAttribute('data-name').toLowerCase();
-                return sortDirection === 'asc'
-                    ? aVal.localeCompare(bVal)
-                    : bVal.localeCompare(aVal);
-            }
-            else if (column === 'quantity' || column === 'price') {
-                aVal = parseFloat(a.getAttribute('data-' + column));
-                bVal = parseFloat(b.getAttribute('data-' + column));
-                return sortDirection === 'asc'
-                    ? aVal - bVal
-                    : bVal - aVal;
-            }
-            else if (column === 'status') {
-                aVal = statusPriority[a.getAttribute('data-status')];
-                bVal = statusPriority[b.getAttribute('data-status')];
-                return sortDirection === 'asc'
-                    ? aVal - bVal
-                    : bVal - aVal;
-            }
-            else if (column === 'date') {
-                aVal = new Date(a.getAttribute('data-date'));
-                bVal = new Date(b.getAttribute('data-date'));
-                return sortDirection === 'asc'
-                    ? aVal - bVal
-                    : bVal - aVal;
-            }
-        });
-
-        // Update arrows with animation
-        document.querySelectorAll('.sort-arrow').forEach(arrow => {
-            arrow.textContent = '↕';
-            arrow.style.opacity = '0.3';
-        });
-
-        const activeButton = document.querySelector(`[data-sort="${column}"]`);
-        const activeArrow = activeButton.querySelector('.sort-arrow');
-        activeArrow.textContent = sortDirection === 'asc' ? '↑' : '↓';
-        activeArrow.style.opacity = '1';
-
-        // Re-append rows in sorted order
-        rows.forEach(row => tbody.appendChild(row));
-    }
-
-    // Add event listeners
-    document.getElementById('searchInput').addEventListener('keyup', filterProducts);
-
-    document.querySelectorAll('.sort-header').forEach(button => {
-        button.addEventListener('click', function() {
-            const column = this.getAttribute('data-sort');
-            sortTable(column);
-        });
-    });
-
-    // Set initial arrow opacity
-    document.querySelectorAll('.sort-arrow').forEach(arrow => {
-        arrow.style.opacity = '0.3';
-    });
-
-    // Auto-dismiss success message
-    document.addEventListener('DOMContentLoaded', () => {
-        const successMessage = document.getElementById('success-message');
-        if (successMessage) {
-            setTimeout(() => {
-                successMessage.style.animation = 'fadeOut 0.5s ease-out forwards';
-                setTimeout(() => successMessage.remove(), 500);
-            }, 5000);
-        }
-    });
-</script>
 
 <script src="{{ asset('js/member.js') }}"></script>
 

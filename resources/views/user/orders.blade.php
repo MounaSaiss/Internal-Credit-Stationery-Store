@@ -344,7 +344,7 @@
                        class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         Shop
                     </a>
-                    <a href="{{  route('user.orders',['username' => Auth::user()->name]) }}"
+                    <a href="{{  route('user.orders') }}"
                        class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
                         My Orders
                     </a>
@@ -536,127 +536,11 @@
                 </tbody>
             </table>
         </div>
-
-        <div id="noResults" class="p-10 text-center text-gray-400 italic hidden">
-            <div class="flex flex-col items-center">
-                <span class="text-4xl mb-2">🔍</span>
-                <p>No orders found matching your search.</p>
-            </div>
+        <div class="mt-12 flex justify-center">
+            {{ $orders->links() }}
         </div>
     </div>
 </main>
-
-<script>
-    // --- VARIABLES ---
-    let currentSort = null;
-    let sortDirection = 'asc';
-
-    // --- SEARCH FUNCTIONALITY ---
-    function filterProducts() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const rows = document.querySelectorAll('.product-row');
-        const noResults = document.getElementById('noResults');
-        let visibleCount = 0;
-
-        rows.forEach(row => {
-            const orderCode = row.getAttribute('data-code').toLowerCase();
-            const orderStatus = row.getAttribute('data-status').toLowerCase();
-
-            if (orderCode.includes(searchTerm) || orderStatus.includes(searchTerm)) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        if (visibleCount === 0 && rows.length > 0) {
-            noResults.classList.remove('hidden');
-            noResults.classList.add('show-animation');
-            setTimeout(() => noResults.classList.remove('show-animation'), 500);
-        } else {
-            noResults.classList.add('hidden');
-        }
-    }
-
-    // --- SORT FUNCTIONALITY ---
-    function sortTable(column) {
-        const tbody = document.querySelector('#productsTable tbody');
-        // Select only product rows (ignore empty state rows)
-        const rows = Array.from(document.querySelectorAll('.product-row'));
-
-        if(rows.length === 0) return;
-
-        // 1. Reset all icons to default
-        const allIcons = ['code', 'date', 'status', 'items'];
-        allIcons.forEach(icon => {
-            const el = document.getElementById(`sort-icon-${icon}`);
-            if(el) {
-                el.innerText = '↕';
-                el.classList.remove('text-blue-600', 'scale-110');
-                el.classList.add('text-gray-400');
-            }
-        });
-
-        // 2. Toggle direction
-        if (currentSort === column) {
-            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            sortDirection = 'asc';
-            currentSort = column;
-        }
-
-        // 3. Update active icon
-        const activeIcon = document.getElementById(`sort-icon-${column}`);
-        if(activeIcon) {
-            activeIcon.innerText = sortDirection === 'asc' ? '↑' : '↓';
-            activeIcon.classList.remove('text-gray-400');
-            activeIcon.classList.add('text-blue-600', 'scale-110');
-        }
-
-        // 4. Sort logic
-        rows.sort((a, b) => {
-            let aVal = a.getAttribute(`data-${column}`);
-            let bVal = b.getAttribute(`data-${column}`);
-
-            // Handle numeric values
-            if (column === 'items' || column === 'date') {
-                aVal = parseFloat(aVal);
-                bVal = parseFloat(bVal);
-            } else {
-                // String comparison
-                aVal = aVal.toLowerCase();
-                bVal = bVal.toLowerCase();
-            }
-
-            if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-            if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-            return 0;
-        });
-
-        // 5. Re-append rows (this updates the UI)
-        rows.forEach(row => tbody.appendChild(row));
-    }
-
-    // --- EVENT LISTENERS ---
-    document.addEventListener('DOMContentLoaded', () => {
-        // Search listener
-        const searchInput = document.getElementById('searchInput');
-        if(searchInput) {
-            searchInput.addEventListener('input', filterProducts);
-        }
-
-        // Auto-dismiss success message
-        const successMessage = document.getElementById('success-message');
-        if (successMessage) {
-            setTimeout(() => {
-                successMessage.style.transition = 'opacity 0.5s ease';
-                successMessage.style.opacity = '0';
-                setTimeout(() => successMessage.remove(), 500);
-            }, 4000);
-        }
-    });
-</script>
 
 <script src="{{ asset('js/member.js') }}"></script>
 </body>

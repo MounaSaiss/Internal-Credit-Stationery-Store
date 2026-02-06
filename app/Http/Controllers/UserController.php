@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -38,10 +38,9 @@ class UserController extends Controller
         return view('user.purchases', compact('orders'));
     }
 
-    public function orders(request $request)
+    public function orders()
     {
-        $user = User::firstWhere('name', $request->username);
-        $orders = Order::with(['items.product'])->where('user_id', $user->id)->get();
+        $orders = Order::with(['items.product'])->where('user_id', Auth::id())->latest()->paginate(2);
 
         return view('user.orders', compact( 'orders'));
 
