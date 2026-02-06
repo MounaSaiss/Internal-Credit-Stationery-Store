@@ -14,23 +14,46 @@ class UserController extends Controller
      */
     public function profile(request $request)
     {
-        $username = request('username');
-        $user = User::firstWhere('name', $username);
+        $user = User::firstWhere('name', $request->username);
         $orders = Order::with(['items.product'])->where('user_id', $user->id)->get();
 
-        return view('user-profile', compact('user', 'orders'));
+        return view('user.profile', compact('user', 'orders'));
+
+    }
+    public function purchases(Request $request)
+    {
+        $orders = collect();
+
+        if ($request->filled('order_id')) {
+            $order = Order::with('items.product')->where('code', $request->order_id)->first();
+            if ($order) {
+                $orders = collect([$order]);
+            }
+        } else {
+            $user = User::firstWhere('name', $request->username);
+
+            $orders = Order::with('items.product')->where('status', 'approved')->where('user_id', $user->id)->get();
+        }
+
+        return view('user.purchases', compact('orders'));
+    }
+
+    public function orders(request $request)
+    {
+        $user = User::firstWhere('name', $request->username);
+        $orders = Order::with(['items.product'])->where('user_id', $user->id)->get();
+
+        return view('user.orders', compact( 'orders'));
 
     }
 
     public function dashboard(request $request)
     {
-        $username = request('username');
-        $user = User::firstWhere('name', $username);
+        $user = User::firstWhere('name', $request->username);
         $ordertotal = Order::where('user_id', $user->id)->count();
-        $pendingOrders = Order::where('user_id', $user->id)->where('status', 'waiting')->count();
-        $pendingOrders = Order::where('user_id', $user->id)->count() - $ordertotal;
-        $recentOrders = Order::where('user_id', $user->id)->with('items.product')->latest()->take(2)->get();
-        return view('user-dashboard', compact('user', 'ordertotal', 'pendingOrders', 'recentOrders'));
+        $pendingOrders = Order::where('user_id', $user->id)->where('status', 'pending')->count();
+        $recentOrders = Order::where('user_id', $user->id)->with('items.product')->latest()->take(3)->get();
+        return view('user.dashboard', compact('user', 'ordertotal', 'pendingOrders', 'recentOrders'));
 
     }
 

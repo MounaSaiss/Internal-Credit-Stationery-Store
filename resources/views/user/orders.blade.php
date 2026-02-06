@@ -1,0 +1,663 @@
+@php
+    $cart = session('cart', []);
+    $cartTotal = 0;
+    foreach ($cart as $item) {
+        $cartTotal += $item['price'] * $item['quantity'];
+    }
+
+    $remainingBalance = auth()->user()->token - $cartTotal;
+    $cartCount = count($cart);
+@endphp
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+
+    <style>
+        /* Nav animation */
+        @keyframes navSlideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        nav {
+            animation: navSlideDown 0.5s ease-out;
+        }
+
+        /* Success message animation */
+        @keyframes slideInTop {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #success-message {
+            animation: slideInTop 0.6s ease-out;
+        }
+
+        /* Profile card animation */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .profile-card {
+            animation: fadeInScale 0.6s ease-out 0.2s both;
+        }
+
+        /* Avatar pulse */
+        @keyframes avatarPulse {
+            0%, 100% {
+                box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 10px 25px -3px rgba(59, 130, 246, 0.5);
+            }
+        }
+
+        .avatar {
+            animation: avatarPulse 2s ease-in-out infinite;
+        }
+
+        /* Badge hover effect */
+        .badge {
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table section animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .table-section {
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        /* Table row stagger animation */
+        @keyframes rowFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .product-row {
+            animation: rowFadeIn 0.4s ease-out forwards;
+            opacity: 0;
+        }
+
+        .product-row:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .product-row:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .product-row:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .product-row:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .product-row:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        .product-row:nth-child(6) {
+            animation-delay: 0.35s;
+        }
+
+        .product-row:nth-child(7) {
+            animation-delay: 0.4s;
+        }
+
+        .product-row:nth-child(8) {
+            animation-delay: 0.45s;
+        }
+
+        /* Search input focus animation */
+        @keyframes inputGlow {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+            50% {
+                box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            }
+        }
+
+        .search-input:focus {
+            animation: inputGlow 1.5s ease-in-out;
+        }
+
+        /* Sort header hover */
+        .sort-header {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .sort-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .sort-header:hover::after {
+            width: 100%;
+        }
+
+        /* Sort arrow animation */
+        .sort-arrow {
+            transition: all 0.3s ease;
+        }
+
+        .sort-header:hover .sort-arrow {
+            transform: scale(1.2);
+        }
+
+        /* Status badge pulse */
+        @keyframes statusPulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .status-badge {
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        /* Cart badge pulse */
+        @keyframes badgePulse {
+            0%, 100% {
+                transform: translate(25%, -25%) scale(1);
+            }
+            50% {
+                transform: translate(25%, -25%) scale(1.1);
+            }
+        }
+
+        .cart-badge {
+            animation: badgePulse 0.5s ease-out;
+        }
+
+        /* Empty state animation */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .empty-icon {
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        /* No results animation */
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-10px);
+            }
+            75% {
+                transform: translateX(10px);
+            }
+        }
+
+        #noResults.show-animation {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* Table header fade in */
+        @keyframes headerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .table-header {
+            animation: headerFadeIn 0.5s ease-out 0.5s both;
+        }
+
+        /* Page header animation */
+        @keyframes pageHeaderFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            animation: pageHeaderFadeIn 0.7s ease-out 0.3s both;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Row highlight on hover */
+        .product-row {
+            transition: all 0.3s ease;
+        }
+
+        .product-row:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Search icon pulse */
+        @keyframes searchPulse {
+            0%, 100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .search-icon {
+            animation: searchPulse 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="antialiased bg-gray-50 text-gray-800 font-figtree h-[100vh]">
+<nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+
+            <div class="flex items-center">
+                <div class="flex-shrink-0 flex items-center gap-3 mr-8">
+                    <div class="h-9 w-9 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-lg">T</span>
+                    </div>
+                    <span class="font-bold text-xl text-gray-900 tracking-tight">TechCorp <span class="text-blue-600">Store</span></span>
+                </div>
+
+                <div class="hidden md:flex md:space-x-8">
+                    <a href="{{ route('user.dashboard', ['username' => Auth::user()->name]) }}"
+                       class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('shop.index') }}"
+                       class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                        Shop
+                    </a>
+                    <a href="{{  route('user.orders',['username' => Auth::user()->name]) }}"
+                       class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                        My Orders
+                    </a>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+
+                <div class="hidden lg:flex flex-col items-end border-r border-gray-200 pr-4">
+                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Solde Restant</span>
+                    <span
+                        class="font-bold {{ $remainingBalance <= 0 ? 'text-red-600' : 'text-blue-600' }} text-base leading-tight">
+                        {{ number_format($remainingBalance) }} <span class="text-xs opacity-70">Tks</span>
+                    </span>
+                </div>
+
+
+                <a href="{{ route('cart.index') }}" class="relative p-2 text-gray-400 hover:text-blue-600 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    @if ($cartCount > 0)
+                        <span
+                            class="cart-badge absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
+                            {{ $cartCount }}
+                        </span>
+                    @endif
+                </a>
+
+                <div class="flex items-center pl-4 border-l border-gray-100 space-x-3">
+                    <div class="hidden md:flex flex-col items-end">
+                        <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}"
+                           class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
+                            {{ Auth::user()->name }}
+                        </a>
+                        <p class="text-[11px] text-gray-500">{{ Auth::user()->role }}
+                            • {{ Auth::user()->department }}</p>
+                    </div>
+                    <div
+                        class="bg-blue-600 text-white w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
+                        {{ substr(Auth::user()->name, 0, 1) }}
+                    </div>
+
+                    <form method="POST" action="{{ route('logout') }}" class="ml-2">
+                        @csrf
+                        <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition"
+                                title="Déconnexion">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+@if (session('success'))
+    <div id="success-message" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 shadow-md rounded"
+         role="alert">
+        <div class="flex items-center">
+            <div class="py-1">
+                <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 20 20">
+                    <path
+                        d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">Success!</p>
+                <p class="text-sm">{{ session('success') }}</p>
+            </div>
+        </div>
+    </div>
+@endif
+
+<div class="bg-white border-b border-gray-200 mb-8 page-header">
+    <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">My Orders</h1>
+            <p class="text-sm text-gray-500 mt-1">View and manage all your order history.</p>
+        </div>
+        <div class="relative w-full sm:w-64">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search orders..."
+                class="search-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <svg class="search-icon w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<main class="max-w-7xl mx-auto px-4 pb-12">
+    <div class="table-section bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" id="productsTable">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                <tr>
+                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group" onclick="sortTable('code')">
+                        <div class="flex items-center space-x-1">
+                            <span>Order Info</span>
+                            <span id="sort-icon-code" class="text-gray-400 group-hover:text-blue-500">↕</span>
+                        </div>
+                    </th>
+                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group" onclick="sortTable('date')">
+                        <div class="flex items-center space-x-1">
+                            <span>Date</span>
+                            <span id="sort-icon-date" class="text-gray-400 group-hover:text-blue-500">↕</span>
+                        </div>
+                    </th>
+                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group" onclick="sortTable('status')">
+                        <div class="flex items-center space-x-1">
+                            <span>Status</span>
+                            <span id="sort-icon-status" class="text-gray-400 group-hover:text-blue-500">↕</span>
+                        </div>
+                    </th>
+                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group text-right" onclick="sortTable('items')">
+                        <div class="flex items-center justify-end space-x-1">
+                            <span>Items</span>
+                            <span id="sort-icon-items" class="text-gray-400 group-hover:text-blue-500">↕</span>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 bg-white">
+                @forelse($orders as $order)
+                    <tr onclick="location.href='{{ route('user.purchases',['order_id' => $order->code ]) }}'"
+                        class="product-row hover:bg-gray-50 transition-colors cursor-pointer group"
+                        data-code="{{ $order->code }}"
+                        data-date="{{ $order->created_at->timestamp }}"
+                        data-status="{{ $order->status }}"
+                        data-items="{{ $order->items->count() }}">
+
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-blue-100 rounded-lg p-2 group-hover:bg-blue-200 transition-colors">
+                                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                </div>
+                                <span class="font-medium text-gray-900 group-hover:text-blue-600 order-code">{{ $order->code }}</span>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span class="text-sm text-gray-600">{{ $order->created_at->format('M d, Y') }}</span>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span @class([
+                                'text-xs font-bold uppercase px-2.5 py-1 rounded-full status-badge',
+                                'text-yellow-700 bg-yellow-100' => $order->status === 'pending',
+                                'text-green-700 bg-green-100' => $order->status === 'approved',
+                                'text-red-700 bg-red-100' => $order->status === 'rejected',
+                            ])>
+                                {{ $order->status }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 text-right">
+                            <span class="text-sm font-semibold text-gray-900">
+                                {{ $order->items->count() }} Product{{ $order->items->count() > 1 ? 's' : '' }}
+                            </span>
+                        </td>
+                    </tr>
+                @empty
+                    <tr id="empty-state-row">
+                        <td colspan="4" class="px-6 py-12 text-center text-gray-400">
+                            <div class="flex flex-col items-center">
+                                <span class="empty-icon text-4xl mb-2">📦</span>
+                                <p class="text-gray-500">No orders found.</p>
+                                <a href="{{ route('shop.index') }}" class="text-blue-600 text-sm hover:underline mt-2">Start Shopping</a>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div id="noResults" class="p-10 text-center text-gray-400 italic hidden">
+            <div class="flex flex-col items-center">
+                <span class="text-4xl mb-2">🔍</span>
+                <p>No orders found matching your search.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- VARIABLES ---
+    let currentSort = null;
+    let sortDirection = 'asc';
+
+    // --- SEARCH FUNCTIONALITY ---
+    function filterProducts() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('.product-row');
+        const noResults = document.getElementById('noResults');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const orderCode = row.getAttribute('data-code').toLowerCase();
+            const orderStatus = row.getAttribute('data-status').toLowerCase();
+
+            if (orderCode.includes(searchTerm) || orderStatus.includes(searchTerm)) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (visibleCount === 0 && rows.length > 0) {
+            noResults.classList.remove('hidden');
+            noResults.classList.add('show-animation');
+            setTimeout(() => noResults.classList.remove('show-animation'), 500);
+        } else {
+            noResults.classList.add('hidden');
+        }
+    }
+
+    // --- SORT FUNCTIONALITY ---
+    function sortTable(column) {
+        const tbody = document.querySelector('#productsTable tbody');
+        // Select only product rows (ignore empty state rows)
+        const rows = Array.from(document.querySelectorAll('.product-row'));
+
+        if(rows.length === 0) return;
+
+        // 1. Reset all icons to default
+        const allIcons = ['code', 'date', 'status', 'items'];
+        allIcons.forEach(icon => {
+            const el = document.getElementById(`sort-icon-${icon}`);
+            if(el) {
+                el.innerText = '↕';
+                el.classList.remove('text-blue-600', 'scale-110');
+                el.classList.add('text-gray-400');
+            }
+        });
+
+        // 2. Toggle direction
+        if (currentSort === column) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortDirection = 'asc';
+            currentSort = column;
+        }
+
+        // 3. Update active icon
+        const activeIcon = document.getElementById(`sort-icon-${column}`);
+        if(activeIcon) {
+            activeIcon.innerText = sortDirection === 'asc' ? '↑' : '↓';
+            activeIcon.classList.remove('text-gray-400');
+            activeIcon.classList.add('text-blue-600', 'scale-110');
+        }
+
+        // 4. Sort logic
+        rows.sort((a, b) => {
+            let aVal = a.getAttribute(`data-${column}`);
+            let bVal = b.getAttribute(`data-${column}`);
+
+            // Handle numeric values
+            if (column === 'items' || column === 'date') {
+                aVal = parseFloat(aVal);
+                bVal = parseFloat(bVal);
+            } else {
+                // String comparison
+                aVal = aVal.toLowerCase();
+                bVal = bVal.toLowerCase();
+            }
+
+            if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+            if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        // 5. Re-append rows (this updates the UI)
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    // --- EVENT LISTENERS ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Search listener
+        const searchInput = document.getElementById('searchInput');
+        if(searchInput) {
+            searchInput.addEventListener('input', filterProducts);
+        }
+
+        // Auto-dismiss success message
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            setTimeout(() => {
+                successMessage.style.transition = 'opacity 0.5s ease';
+                successMessage.style.opacity = '0';
+                setTimeout(() => successMessage.remove(), 500);
+            }, 4000);
+        }
+    });
+</script>
+
+<script src="{{ asset('js/member.js') }}"></script>
+</body>
+</html>

@@ -13,4 +13,10 @@ class ShopController extends Controller
         $products = Product::where('stock' ,'>',0)->latest()->paginate(12);
         return view('shop.index', compact('products'));
     }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('shop.show', compact('product'));
+    }
 }
