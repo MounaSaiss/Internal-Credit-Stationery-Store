@@ -336,7 +336,7 @@
                 </div>
 
                 <div class="hidden md:flex md:space-x-8">
-                    <a href="{{ route('user.dashboard', ['username' => Auth::user()->name]) }}"
+                    <a href="{{ route('user.dashboard', ['userId' => Auth::user()->id]) }}"
                        class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         Dashboard
                     </a>
@@ -354,7 +354,7 @@
             <div class="flex items-center space-x-4">
 
                 <div class="hidden lg:flex flex-col items-end border-r border-gray-200 pr-4">
-                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Solde Restant</span>
+                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Balance</span>
                     <span
                         class="font-bold {{ $remainingBalance <= 0 ? 'text-red-600' : 'text-blue-600' }} text-base leading-tight">
                         {{ number_format($remainingBalance) }} <span class="text-xs opacity-70">Tks</span>
@@ -378,7 +378,7 @@
 
                 <div class="flex items-center pl-4 border-l border-gray-100 space-x-3">
                     <div class="hidden md:flex flex-col items-end">
-                        <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}"
+                        <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}"
                            class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
                             {{ Auth::user()->name }}
                         </a>
@@ -428,7 +428,8 @@
 @endif
 
 <div class="bg-white border-b border-gray-200 mb-8 page-header">
-    <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div
+        class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">My Orders</h1>
             <p class="text-sm text-gray-500 mt-1">View and manage all your order history.</p>
@@ -455,25 +456,29 @@
             <table class="w-full text-left border-collapse" id="productsTable">
                 <thead class="bg-gray-50 border-b border-gray-100">
                 <tr>
-                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group" onclick="sortTable('code')">
+                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group"
+                        onclick="sortTable('code')">
                         <div class="flex items-center space-x-1">
                             <span>Order Info</span>
                             <span id="sort-icon-code" class="text-gray-400 group-hover:text-blue-500">↕</span>
                         </div>
                     </th>
-                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group" onclick="sortTable('date')">
+                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group"
+                        onclick="sortTable('date')">
                         <div class="flex items-center space-x-1">
                             <span>Date</span>
                             <span id="sort-icon-date" class="text-gray-400 group-hover:text-blue-500">↕</span>
                         </div>
                     </th>
-                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group" onclick="sortTable('status')">
+                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group"
+                        onclick="sortTable('status')">
                         <div class="flex items-center space-x-1">
                             <span>Status</span>
                             <span id="sort-icon-status" class="text-gray-400 group-hover:text-blue-500">↕</span>
                         </div>
                     </th>
-                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group text-right" onclick="sortTable('items')">
+                    <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-blue-600 transition-colors group text-right"
+                        onclick="sortTable('items')">
                         <div class="flex items-center justify-end space-x-1">
                             <span>Items</span>
                             <span id="sort-icon-items" class="text-gray-400 group-hover:text-blue-500">↕</span>
@@ -481,7 +486,7 @@
                     </th>
                 </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 bg-white">
+                <tbody id="ordersTableBody" class="divide-y divide-gray-100 bg-white">
                 @forelse($orders as $order)
                     <tr onclick="location.href='{{ route('user.purchases',['order_id' => $order->code ]) }}'"
                         class="product-row hover:bg-gray-50 transition-colors cursor-pointer group"
@@ -493,11 +498,14 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-3">
                                 <div class="bg-blue-100 rounded-lg p-2 group-hover:bg-blue-200 transition-colors">
-                                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor"
+                                         viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                                     </svg>
                                 </div>
-                                <span class="font-medium text-gray-900 group-hover:text-blue-600 order-code">{{ $order->code }}</span>
+                                <span
+                                    class="font-medium text-gray-900 group-hover:text-blue-600 order-code">{{ $order->code }}</span>
                             </div>
                         </td>
 
@@ -528,7 +536,8 @@
                             <div class="flex flex-col items-center">
                                 <span class="empty-icon text-4xl mb-2">📦</span>
                                 <p class="text-gray-500">No orders found.</p>
-                                <a href="{{ route('shop.index') }}" class="text-blue-600 text-sm hover:underline mt-2">Start Shopping</a>
+                                <a href="{{ route('shop.index') }}" class="text-blue-600 text-sm hover:underline mt-2">Start
+                                    Shopping</a>
                             </div>
                         </td>
                     </tr>
@@ -536,11 +545,80 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-12 flex justify-center">
-            {{ $orders->links() }}
-        </div>
+    </div>
+    <div class="table-section mt-12 flex justify-center">
+        {{ $orders->links() }}
     </div>
 </main>
+<script>
+    const searchInput = document.getElementById("searchInput");
+
+    searchInput.addEventListener("input", function (event) {
+        let value = event.target.value;
+        fetch(`/user/orders/search/${value}`)
+        .then(res=>{
+            if(res.ok){
+                return res.json();
+            }
+        })
+        .then(data=>{
+            renderData(data);
+        })
+    });
+
+
+        const tableBody = document.getElementById("ordersTableBody");
+
+        function renderData(data) {
+        tableBody.innerHTML = "";
+
+        if (data.length === 0) {
+        tableBody.innerHTML = `
+                    <tr id="empty-state-row">
+                        <td colspan="4" class="px-6 py-12 text-center text-gray-400">
+                            <div class="flex flex-col items-center">
+                                <span class="empty-icon text-4xl mb-2">📦</span>
+                                <p class="text-gray-500">No orders found.</p>
+                                <a href="{{ route('shop.index') }}" class="text-blue-600 text-sm hover:underline mt-2">Start
+                                    Shopping</a>
+                            </div>
+                        </td>
+                    </tr>
+        `;
+        return;
+    }
+
+        data.forEach(order => {
+        tableBody.innerHTML += `
+            <tr onclick="location.href='/user/purchases?order_id=${order.code}'"
+                class="hover:bg-gray-50 cursor-pointer">
+
+                <td class="px-6 py-4 font-medium text-gray-900">
+                    ${order.code}
+                </td>
+
+                <td class="px-6 py-4 text-sm text-gray-600">
+                    ${new Date(order.created_at).toLocaleDateString()}
+                </td>
+
+                <td class="px-6 py-4">
+                    <span class="text-xs font-bold uppercase px-2.5 py-1 rounded-full
+                        ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
+                        ${order.status === 'approved' ? 'bg-green-100 text-green-700' : ''}
+                        ${order.status === 'rejected' ? 'bg-red-100 text-red-700' : ''}">
+                        ${order.status}
+                    </span>
+                </td>
+
+                <td class="px-6 py-4 text-right font-semibold">
+                    ${order.items.length} Products
+                </td>
+            </tr>
+        `;
+    });
+    }
+
+</script>
 
 <script src="{{ asset('js/member.js') }}"></script>
 </body>

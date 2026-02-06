@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function profile(request $request)
     {
-        $user = User::firstWhere('name', $request->username);
+        $user = User::firstWhere('id', $request->userId);
         $orders = Order::with(['items.product'])->where('user_id', $user->id)->get();
 
         return view('user.profile', compact('user', 'orders'));
@@ -30,7 +30,7 @@ class UserController extends Controller
                 $orders = collect([$order]);
             }
         } else {
-            $user = User::firstWhere('name', $request->username);
+            $user = User::firstWhere('id', $request->userId);
 
             $orders = Order::with('items.product')->where('status', 'approved')->where('user_id', $user->id)->get();
         }
@@ -45,13 +45,20 @@ class UserController extends Controller
         return view('user.orders', compact( 'orders'));
 
     }
+    public function search($value)
+    {
+        $orders = Order::with(['items.product'])->where('user_id', Auth::id())->where('code', 'LIKE', '%' . $value . '%')->get();
+
+        return response()->json($orders);
+
+    }
 
     public function dashboard(request $request)
     {
-        $user = User::firstWhere('name', $request->username);
+        $user = User::firstWhere('id', $request->userId);
         $ordertotal = Order::where('user_id', $user->id)->count();
         $pendingOrders = Order::where('user_id', $user->id)->where('status', 'pending')->count();
-        $recentOrders = Order::where('user_id', $user->id)->with('items.product')->latest()->take(3)->get();
+        $recentOrders = Order::where('user_id', $user->id)->orderBy('updated_at')->with('items.product')->latest()->take(3)->get();
         return view('user.dashboard', compact('user', 'ordertotal', 'pendingOrders', 'recentOrders'));
 
     }

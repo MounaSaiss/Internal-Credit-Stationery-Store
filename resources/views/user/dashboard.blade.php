@@ -170,7 +170,7 @@
                 </div>
 
                 <div class="hidden md:flex md:space-x-8">
-                    <a href="{{ route('user.dashboard', ['username' => Auth::user()->name]) }}"
+                    <a href="{{ route('user.dashboard', ['userId' => Auth::user()->id]) }}"
                        class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
                         Dashboard
                     </a>
@@ -188,7 +188,7 @@
             <div class="flex items-center space-x-4">
 
                 <div class="hidden lg:flex flex-col items-end border-r border-gray-200 pr-4">
-                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Solde Restant</span>
+                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Balance</span>
                     <span
                         class="font-bold {{ $user->token  <= 0 ? 'text-red-600' : 'text-blue-600' }} text-base leading-tight">
                         {{ number_format($user->token ) }} <span class="text-xs opacity-70">Tks</span>
@@ -212,7 +212,7 @@
 
                 <div class="flex items-center pl-4 border-l border-gray-100 space-x-3">
                     <div class="hidden md:flex flex-col items-end">
-                        <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}"
+                        <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}"
                            class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
                             {{ Auth::user()->name }}
                         </a>
@@ -282,7 +282,7 @@
                         Shop Now
                     </button>
                     <button
-                        onclick="location.href='{{ route('user.profile', ['username' => Auth::user()->name]) }}'"
+                        onclick="location.href='{{ route('user.profile', ['userId' => Auth::user()->id]) }}'"
                         class="flex-1 bg-white bg-opacity-20 backdrop-blur text-white font-semibold py-3 px-4 rounded-xl hover:bg-opacity-30 transition-colors">
                         View History
                     </button>
@@ -410,7 +410,7 @@
                         </svg>
                     </a>
 
-                    <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}"
+                    <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}"
                        class="flex items-center justify-between p-3 rounded-lg hover:bg-purple-50 transition-colors group">
                         <div class="flex items-center space-x-3">
                             <div class="bg-purple-100 rounded-lg p-2 group-hover:bg-purple-200 transition-colors">
@@ -429,7 +429,7 @@
                         </svg>
                     </a>
 
-                    <a href="{{ route('user.purchases', ['username' => Auth::user()->name]) }}"
+                    <a href="{{ route('user.purchases', ['userId' => Auth::user()->id]) }}"
                        class="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 transition-colors group">
                         <div class="flex items-center space-x-3">
                             <div class="bg-green-100 rounded-lg p-2 group-hover:bg-green-200 transition-colors">

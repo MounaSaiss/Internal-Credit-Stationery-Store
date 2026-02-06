@@ -17,6 +17,7 @@ Route::get('/', function () {
 Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::get('/user/purchases', [UserController::class, 'purchases'])->name('user.purchases');
 Route::get('/user/orders', [UserController::class, 'orders'])->name('user.orders');
+Route::get('/user/orders/search/{value}', [UserController::class, 'search'])->name('user.orders');
 Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
 
 Auth::routes();

@@ -294,7 +294,7 @@
                 </div>
 
                 <div class="hidden md:flex md:space-x-8">
-                    <a href="{{ route('user.dashboard', ['username' => Auth::user()->name]) }}" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                    <a href="{{ route('user.dashboard', ['userId' => Auth::user()->id]) }}" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         Dashboard
                     </a>
                     <a href="{{ route('shop.index') }}" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">

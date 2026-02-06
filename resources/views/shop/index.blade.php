@@ -253,13 +253,13 @@
                 </div>
 
                 <div class="hidden md:flex md:space-x-8">
-                    <a href="{{ route('user.dashboard', ['username' => Auth::user()->name]) }}" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                    <a href="{{ route('user.dashboard', ['userId' => Auth::user()->id]) }}" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         Dashboard
                     </a>
                     <a href="{{ route('shop.index') }}" class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
                         Shop
                     </a>
-                    <a href="{{  route('user.orders',['username' => Auth::user()->name]) }}" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                    <a href="{{  route('user.orders',['userId' => Auth::user()->id]) }}" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         My Orders
                     </a>
                 </div>
@@ -268,7 +268,7 @@
             <div class="flex items-center space-x-4">
 
                 <div class="hidden lg:flex flex-col items-end border-r border-gray-200 pr-4">
-                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Solde Restant</span>
+                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Balance</span>
                     <span class="font-bold {{ $remainingBalance <= 0 ? 'text-red-600' : 'text-blue-600' }} text-base leading-tight">
                         {{ number_format($remainingBalance) }} <span class="text-xs opacity-70">Tks</span>
                     </span>
@@ -288,7 +288,7 @@
 
                 <div class="flex items-center pl-4 border-l border-gray-100 space-x-3">
                     <div class="hidden md:flex flex-col items-end">
-                        <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}" class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
+                        <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}" class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
                             {{ Auth::user()->name }}
                         </a>
                         <p class="text-[11px] text-gray-500">{{ Auth::user()->role }} • {{ Auth::user()->department }}</p>
