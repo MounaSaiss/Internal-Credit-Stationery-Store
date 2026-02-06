@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
@@ -12,6 +13,11 @@ use App\Http\Controllers\Shop\OrderController;
 Route::get('/', function () {
     return view('welcome');
 });
+//we should separate the models to independent entities like Admin, Manager and Employee
+Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::get('/user/purchases', [UserController::class, 'purchases'])->name('user.purchases');
+Route::get('/user/orders', [UserController::class, 'orders'])->name('user.orders');
+Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
 
 Auth::routes();
 

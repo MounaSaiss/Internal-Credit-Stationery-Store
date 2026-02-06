@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
-use App\Models\Product;
-use App\Models\Order;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
  */
@@ -18,9 +17,6 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
-        $order = Order::inRandomOrder()->first();
-        $product = Product::inRandomOrder()->first();
-
         return [
             'user_id' => User::factory(),
             'status' => 'approved',
