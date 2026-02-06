@@ -22,10 +22,10 @@ class OrderFactory extends Factory
         $product = Product::inRandomOrder()->first();
 
         return [
-            'order_id'     => $order ? $order->id : Order::factory(),
-            'product_id'   => $product ? $product->id : Product::factory(),
-            'quantity'     => $this->faker->numberBetween(1, 5),
-            'token_price'  => $product ? $product->price : $this->faker->numberBetween(10, 100),
+            'user_id' => User::factory(),
+            'status' => 'approved',
+            'total_price' => fake()->numberBetween(50, 1000),
+            'code' => 'ORD-' . fake()->unique()->numberBetween(10000000, 999999999),
         ];
     }
 }
