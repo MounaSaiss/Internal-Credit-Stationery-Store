@@ -38,3 +38,5 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::post('/orders/{id}/approve', [ManagerOrderController::class, 'approve'])->name('orders.approve');
     Route::post('/orders/{id}/reject', [ManagerOrderController::class, 'reject'])->name('orders.reject');
 });
+
+    

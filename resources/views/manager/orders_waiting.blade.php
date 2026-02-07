@@ -113,7 +113,7 @@
                         </td>
 
                         <td class="px-6 py-4 font-bold text-blue-600">
-                            {{ $order->total_price }} MAD
+                            {{ $order->total_price }} Token
                         </td>
 
                         <td class="px-6 py-4">
