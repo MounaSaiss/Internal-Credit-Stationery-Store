@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashController;
+use App\Http\Controllers\ManagerDashController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
@@ -17,6 +18,7 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/AdminStatdashboard', [AdminDashController::class, 'ViewAdmindash'])->name('dashboard');
+Route::get('/managerDashboard', [ManagerDashController::class, 'ViewManagerdash'])->name('managerDashboard');
 
 Auth::routes();
 

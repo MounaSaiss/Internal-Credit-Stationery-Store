@@ -36,7 +36,6 @@ foreach ($orders as $order) {
             'Product Name'=>$item->product->name,
             'Prices'=>$item->product->price,
             'Quantity'=>$item->quantity,
-            // 'Subtotal'=>$item->quantity *$item->product->price,
             $total = ($item->quantity * $item->product->price)
         ];
         $ordersRow[$userId] ['Total Price'] += $total;
