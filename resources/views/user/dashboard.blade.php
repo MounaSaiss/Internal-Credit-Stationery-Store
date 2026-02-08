@@ -14,144 +14,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - TechCorp Store</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: 'Sora', sans-serif;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse-glow {
-
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            }
-
-            50% {
-                box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
-            }
-        }
-
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -300% 0;
-            }
-
-            100% {
-                background-position: 300% 0;
-            }
-        }
-
-        .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .animate-slide-in-right {
-            animation: slideInRight 0.6s ease-out;
-        }
-
-        .animate-scale-in {
-            animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        .token-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .stat-card {
-            background: linear-gradient(to bottom right, #ffffff, #f9fafb);
-        }
-
-        .shimmer-effect {
-            background: linear-gradient(90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.2) 50%,
-            transparent 100%);
-            background-size: 300% 100%;
-            animation: shimmer 8s ease-in-out infinite;
-        }
-
-        .balance-number {
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        /* Page header animation */
-        @keyframes pageHeaderFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .page-header {
-            animation: pageHeaderFadeIn 0.7s ease-out 0.3s both;
-        }
-    </style>
 </head>
 
 <body class="bg-gray-50">
@@ -195,7 +64,6 @@
                     </span>
                 </div>
 
-
                 <a href="{{ route('cart.index') }}" class="relative p-2 text-gray-400 hover:text-blue-600 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -210,7 +78,7 @@
                     @endif
                 </a>
 
-                <div class="flex items-center pl-4 border-l border-gray-100 space-x-3">
+                <div class="flex items-center pl-4 border-l border-gray-100 space-x-3 relative">
                     <div class="hidden md:flex flex-col items-end">
                         <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}"
                            class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
@@ -219,22 +87,73 @@
                         <p class="text-[11px] text-gray-500">{{ Auth::user()->role }}
                             • {{ Auth::user()->department }}</p>
                     </div>
-                    <div
-                        class="bg-blue-600 text-white w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
-                        {{ substr(Auth::user()->name, 0, 1) }}
-                    </div>
 
-                    <form method="POST" action="{{ route('logout') }}" class="ml-2">
-                        @csrf
-                        <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition"
-                                title="Déconnexion">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                            </svg>
+                    <!-- Profile Dropdown -->
+                    <div class="relative" id="profileDropdown">
+                        <button
+                            onclick="toggleDropdown()"
+                            class="bg-blue-600 text-white w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            {{ substr(Auth::user()->name, 0, 1) }}
                         </button>
-                    </form>
+
+                        <!-- Dropdown Menu -->
+                        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+                            <div class="py-1">
+                                <!-- User Info Header -->
+                                <div class="px-4 py-3 border-b border-gray-100">
+                                    <p class="text-sm font-semibold text-gray-900">{{ Auth::user()->name }}</p>
+                                    <p class="text-xs text-gray-500 mt-0.5">{{ Auth::user()->email }}</p>
+                                </div>
+
+                                <!-- Menu Items -->
+                                <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}"
+                                   class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    My Profile
+                                </a>
+
+                                <a href="{{ route('user.orders') }}"
+                                   class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                                    </svg>
+                                    My Orders
+                                </a>
+
+                                <a href="{{ route('user.settings', ['userId' => Auth::user()->id]) }}"
+                                   class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    Settings
+                                </a>
+
+                                <a href="#"
+                                   class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    Help & Support
+                                </a>
+
+                                <div class="border-t border-gray-100 mt-1 pt-1">
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                                class="flex items-center w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                            <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                            </svg>
+                                            Sign Out
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -347,22 +266,22 @@
                 </div>
 
                 @forelse($recentOrders as $order)
-                        <div onclick="location.href='{{ route('user.purchases',['order_id' => $order->code ])  }}'" class="px-6 py-4 hover:bg-gray-50 transition-colors cursor-pointer">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="flex items-center space-x-3">
-                                    <div class="bg-blue-100 rounded-lg p-2">
-                                        <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor"
-                                             viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900 hover:text-blue-600 transition">{{ $order->code }}</p>
-                                        <p class="text-sm text-gray-500">{{ $order->created_at->format('M d, Y') }}</p>
-                                    </div>
+                    <div onclick="location.href='{{ route('user.purchases',['order_id' => $order->code ])  }}'" class="px-6 py-4 hover:bg-gray-50 transition-colors cursor-pointer">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-blue-100 rounded-lg p-2">
+                                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor"
+                                         viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
                                 </div>
-                                <div class="text-right">
+                                <div>
+                                    <p class="font-medium text-gray-900 hover:text-blue-600 transition">{{ $order->code }}</p>
+                                    <p class="text-sm text-gray-500">{{ $order->created_at->format('M d, Y') }}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
                                         <span
                                         @class([
                                             'text-sm font-medium px-2 py-1 rounded-full',
@@ -372,11 +291,11 @@
                                         ])>
                                             {{ $order->status }}
                                         </span>
-                                    <p class="text-sm font-semibold text-gray-900 mt-1">
-                                        {{ $order->items->count() }} Product{{ $order->items->count() > 1 ? 's' : '' }}</p>
-                                </div>
+                                <p class="text-sm font-semibold text-gray-900 mt-1">
+                                    {{ $order->items->count() }} Product{{ $order->items->count() > 1 ? 's' : '' }}</p>
                             </div>
                         </div>
+                    </div>
 
                 @empty
                     <div class="px-6 py-8 text-center">
@@ -471,7 +390,27 @@
 </main>
 
 <script>
+    // Dropdown toggle function
+    function toggleDropdown() {
+        const dropdown = document.getElementById('dropdownMenu');
+        dropdown.classList.toggle('hidden');
 
+        if (!dropdown.classList.contains('hidden')) {
+            dropdown.classList.add('dropdown-enter');
+        }
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('profileDropdown');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        if (!dropdown.contains(event.target) && !dropdownMenu.classList.contains('hidden')) {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+
+    // Balance counter animation
     function animateCounter(element, target, duration = 2000) {
         const start = 0;
         const increment = target / (duration / 16); // 60 FPS
@@ -490,7 +429,6 @@
 
     window.addEventListener('load', () => {
         const balanceElement = document.getElementById('balance-counter');
-        // animateCounter(element, targetNumber, speedInMilliseconds)
         animateCounter(balanceElement, {{ $user->token }}, 800);
     });
 </script>
