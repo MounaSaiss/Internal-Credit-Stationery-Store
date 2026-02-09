@@ -38,6 +38,8 @@
                         <span class="font-bold text-xl text-gray-900 tracking-tight">TechCorp <span
                                 class="text-blue-600">Store</span></span>
                     </div>
+                    <span class="font-bold text-xl text-gray-900 tracking-tight">TechCorp <span class="text-blue-600">Store</span></span>
+                </div>
 
                 <div class="hidden md:flex md:space-x-8">
                     <a href="{{ route('user.dashboard', ['userId' => Auth::user()->id]) }}"
@@ -73,8 +75,8 @@
                     </svg>
                     @if ($cartCount > 0)
                         <span
-                            class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
-                            {{ $cartCount }}
+                            class="font-bold {{ $user->token <= 0 ? 'text-red-600' : 'text-blue-600' }} text-base leading-tight">
+                            {{ number_format($user->token) }} <span class="text-xs opacity-70">Tks</span>
                         </span>
                     @endif
                 </a>
@@ -85,6 +87,8 @@
                            class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
                             {{ Auth::user()->name }}
                         </a>
+                        <p class="text-[11px] text-gray-500">{{ Auth::user()->role }}
+                            • {{ Auth::user()->department }}</p>
                     </div>
 
                     <!-- Profile Dropdown -->
@@ -170,14 +174,36 @@
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-4">
+            </div>
+        </div>
+    </div>
+</nav>
 
-                    <div class="hidden lg:flex flex-col items-end border-r border-gray-200 pr-4">
-                        <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Solde Restant</span>
-                        <span
-                            class="font-bold {{ $user->token <= 0 ? 'text-red-600' : 'text-blue-600' }} text-base leading-tight">
-                            {{ number_format($user->token) }} <span class="text-xs opacity-70">Tks</span>
-                        </span>
+<!-- Welcome Section -->
+<div class="bg-white border-b border-gray-200 mb-8 page-header">
+    <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Hello, {{ Auth::user()->name }} 👋</h1>
+        <p class="text-gray-600">Here's an overview of your TechCorp Store account</p>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Token Balance Card -->
+    <div class="mb-8 animate-fade-in-up" style="animation-delay: 0.1s;">
+        <div class="token-card rounded-2xl p-8 text-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-white opacity-10"></div>
+            <div class="absolute bottom-0 left-0 -mb-8 -ml-8 h-40 w-40 rounded-full bg-white opacity-10"></div>
+            <div class="shimmer-effect absolute inset-0 pointer-events-none"></div>
+            <div class="relative z-10">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <p class="text-blue-100 text-sm font-medium mb-2">Available Balance</p>
+                        <h2 class="text-5xl font-bold mb-1 animate-scale-in">
+                            <span id="balance-counter" class="balance-number">0</span>
+                        </h2>
+                        <p class="text-blue-100 text-sm">Tokens</p>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-xl p-3">
                         <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -369,50 +395,7 @@
                         <div class="px-6 py-8 text-center">
                             <p class="text-gray-500">No recent orders found.</p>
                         </div>
-                        <svg class="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none"
-                             stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-
-                    <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}"
-                       class="flex items-center justify-between p-3 rounded-lg hover:bg-purple-50 transition-colors group">
-                        <div class="flex items-center space-x-3">
-                            <div class="bg-purple-100 rounded-lg p-2 group-hover:bg-purple-200 transition-colors">
-                                <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor"
-                                     viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
-                            </div>
-                            <span class="font-medium text-gray-900">Full History</span>
-                        </div>
-                        <svg class="h-5 w-5 text-gray-400 group-hover:text-purple-600 transition-colors" fill="none"
-                             stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-
-                    <a href="{{ route('user.purchases', ['userId' => Auth::user()->id]) }}"
-                       class="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 transition-colors group">
-                        <div class="flex items-center space-x-3">
-                            <div class="bg-green-100 rounded-lg p-2 group-hover:bg-green-200 transition-colors">
-                                <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor"
-                                     viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                            <span class="font-medium text-gray-900">My Transactions</span>
-                        </div>
-                        <svg class="h-5 w-5 text-gray-400 group-hover:text-green-600 transition-colors" fill="none"
-                             stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
+                    @endforelse
                 </div>
             </div>
 
@@ -440,17 +423,15 @@
                             </svg>
                         </a>
 
-                        <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}"
-                            class="flex items-center justify-between p-3 rounded-lg hover:bg-purple-50 transition-colors group">
-                            <div class="flex items-center space-x-3">
-                                <div class="bg-purple-100 rounded-lg p-2 group-hover:bg-purple-200 transition-colors">
-                                    <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                </div>
-                                <span class="font-medium text-gray-900">Full History</span>
+                    <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}"
+                       class="flex items-center justify-between p-3 rounded-lg hover:bg-purple-50 transition-colors group">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-purple-100 rounded-lg p-2 group-hover:bg-purple-200 transition-colors">
+                                <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
                             </div>
                             <svg class="h-5 w-5 text-gray-400 group-hover:text-purple-600 transition-colors"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -459,17 +440,15 @@
                             </svg>
                         </a>
 
-                        <a href="{{ route('user.purchases', ['username' => Auth::user()->name]) }}"
-                            class="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 transition-colors group">
-                            <div class="flex items-center space-x-3">
-                                <div class="bg-green-100 rounded-lg p-2 group-hover:bg-green-200 transition-colors">
-                                    <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <span class="font-medium text-gray-900">My Transactions</span>
+                    <a href="{{ route('user.purchases', ['userId' => Auth::user()->id]) }}"
+                       class="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 transition-colors group">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-green-100 rounded-lg p-2 group-hover:bg-green-200 transition-colors">
+                                <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
                             </div>
                             <svg class="h-5 w-5 text-gray-400 group-hover:text-green-600 transition-colors"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -499,7 +478,8 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
 <script>
     function toggleDropdown() {
