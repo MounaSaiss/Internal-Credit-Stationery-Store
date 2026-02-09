@@ -26,7 +26,6 @@
             font-family: 'Figtree', sans-serif;
         }
 
-        /* Toast Animation */
         @keyframes slideInRight {
             from {
                 transform: translateX(400px);
@@ -53,7 +52,6 @@
             animation: fadeOut 0.3s ease-in forwards;
         }
 
-        /* Product Card Stagger Animation */
         @keyframes fadeInUp {
             from {
                 opacity: 0;

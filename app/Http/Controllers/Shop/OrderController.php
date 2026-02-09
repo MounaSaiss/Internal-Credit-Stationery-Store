@@ -39,6 +39,7 @@ class OrderController extends Controller
 
                     $linePrice = $product->price * $details['quantity'];
                     $totalCost += $linePrice;
+                    
                     $itemData = [
                         'product_id' => $id,
                         'quantity' => $details['quantity'],

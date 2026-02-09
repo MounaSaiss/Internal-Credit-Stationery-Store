@@ -35,11 +35,6 @@
                         <i class="fas fa-box me-2"></i> Sales Statistics
                     </a>
 
-                    <a href="{{ route('home') }}"
-                        class="px-3 py-2 text-gray-600 hover:text-gray-900 font-medium text-sm rounded-lg hover:bg-gray-100 transition-colors">
-                        Tableau de bord
-                    </a>
-
                     <a href="{{ route('products.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 font-bold rounded-lg transition-all text-sm">
                         <span
@@ -48,6 +43,18 @@
                         </span>
                         Nouveau Produit
                     </a>
+
+                    <form method="POST" action="{{ route('logout') }}" class="ml-2">
+                        @csrf
+                        <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition"
+                            title="Déconnexion">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -171,7 +178,8 @@
                 <div
                     class="col-span-full flex flex-col items-center justify-center py-12 text-center bg-white rounded-2xl border border-gray-200 border-dashed">
                     <div class="bg-gray-50 p-4 rounded-full mb-3">
-                        <svg class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                         </svg>
