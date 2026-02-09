@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -15,7 +16,6 @@ class OrderFactory extends Factory
      *
      * @return array<string, mixed>
      */
-<<<<<<< HEAD
     public function definition(): array{
     return [
         'user_id' => User::factory(),
@@ -24,7 +24,6 @@ class OrderFactory extends Factory
         'code' => 'ORD-' . fake()->unique()->numberBetween(10000000, 999999999),
         ];}
 }
-=======
     public function definition(): array
     {
         return [
@@ -35,4 +34,3 @@ class OrderFactory extends Factory
         ];
     }
 }
->>>>>>> f934d56bc1f9ea7542002570ceedf445e179ade2
