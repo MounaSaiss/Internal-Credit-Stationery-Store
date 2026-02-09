@@ -83,38 +83,28 @@
                     <thead>
                         <tr>
                             <th>Buyer ID</th>
-                            <th>Buyer Name</th>
-                            <th>Role</th>
+                            <th>Manager Name</th>
                             <th>departement</th>
-                            <th>Product</th>
+                            <th>employees</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($buyersRow as $row)
+                        @foreach ($managersData as $data)
                             <tr>
-                                <td>{{ $row['id'] }}</td>
+                                <td>{{ $data['manager_id'] }}</td>
 
                                 <td class="fw-semibold">
-                                    {{ $row['buyername'] }}
+                                    {{ $data['manager_name'] }}
                                 </td>
 
                                 <td>
                                     <span class="badge bg-secondary">
-                                        {{ $row['role'] }}
+                                        {{ $data['department'] }}
                                     </span>
                                 </td>
 
-                                <td>{{ $row['departement'] }}</td>
+                                <td>{{ $data['employees'] }}</td>
 
-                                <td>
-                                    <ul class="list-unstyled mb-0">
-                                        @foreach ($row['Products'] as $product)
-                                            <li class="product-item">
-                                                {{ $product['Product Name'] }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>

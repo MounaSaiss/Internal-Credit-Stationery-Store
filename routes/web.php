@@ -17,8 +17,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/AdminStatdashboard', [AdminDashController::class, 'ViewAdmindash'])->name('dashboard');
-Route::get('/managerDashboard', [ManagerDashController::class, 'ViewManagerdash'])->name('managerDashboard');
+Route::get('/AdminStatdashboard', [AdminDashController::class, 'ViewAdmindash'])->name('dashboard')->middleware('auth');;
+Route::get('/managerDashboard', [ManagerDashController::class, 'ViewManagerdash'])->name('managerDashboard')->middleware('auth');
 
 Auth::routes();
 

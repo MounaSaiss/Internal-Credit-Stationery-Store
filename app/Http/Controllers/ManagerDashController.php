@@ -2,48 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ManagerDashController extends Controller
 {
     public function ViewManagerdash()
     {
-        $buyers = Order::with([
-            'user:id,name,role,department',
-            'items.product:id,name'
-        ])
-        ->whereHas('user', function ($q) {
-            $q->where('role', 'employee');
-        })
-        ->get();
+        $managers = User::where('role', 'manager')
+            ->select('id', 'name', 'department')
+            ->get();
 
-        $buyersRow = [];
+        $managersData = [];
 
-        foreach ($buyers as $buy) {
+        foreach ($managers as $manager) {
 
-            if (!$buy->user) continue;
+            $employees = User::where('role', 'employee')
+                ->where('department', $manager->department)
+                ->select('id', 'name', 'department')
+                ->get();
 
-            $userId = $buy->user->id;
-
-            if (!isset($buyersRow[$userId])) {
-                $buyersRow[$userId] = [
-                    'id' => $buy->user->id,
-                    'buyername' => $buy->user->name,
-                    'role' => $buy->user->role,
-                    'Products' => [],
-                    'departement' => $buy->user->department,
-                ];
-            }
-
-            foreach ($buy->items as $item) {
-                $buyersRow[$userId]['Products'][] = [
-                    'Product Name' => $item->product->name
-                ];
-            }
+            $managersData[] = [
+                'manager_id' => $manager->id,
+                'manager_name' => $manager->name,
+                'department' => $manager->department,
+                'employees' => $employees
+            ];
         }
 
-        return view('managerDashboard', compact('buyersRow'));
+        return view('managerDashboard', compact('managersData'));
     }
 }
