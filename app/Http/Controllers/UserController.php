@@ -19,16 +19,18 @@ class UserController extends Controller
         return view('user.profile', compact('user', 'orders'));
 
     }
-    public function settings(request $request)
-    {
-        $user = User::firstWhere('id', $request->userId);
-        $orders = Order::with(['items.product'])
-            ->where('user_id', $user->id)
-            ->get();
 
-        return view('user.profile-settings', compact('user', 'orders'));
+    public function orders()
+    {
+        $orders = Order::with(['items.product'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(2);
+
+        return view('user.orders', compact( 'orders'));
 
     }
+
     public function purchases(Request $request)
     {
         $orders = collect();
@@ -49,16 +51,7 @@ class UserController extends Controller
         return view('user.purchases', compact('orders'));
     }
 
-    public function orders()
-    {
-        $orders = Order::with(['items.product'])
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->paginate(2);
 
-        return view('user.orders', compact( 'orders'));
-
-    }
     public function search(Request $request, $value)
     {
         $query = Order::with(['items.product'])
@@ -95,6 +88,18 @@ class UserController extends Controller
 
     }
 
+    public function settings(request $request)
+    {
+        $user = User::firstWhere('id', $request->userId);
+        $orders = Order::with(['items.product'])
+            ->where('user_id', $user->id)
+            ->get();
+
+        return view('user.profile-settings', compact('user', 'orders'));
+
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -108,7 +113,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //coments
+
     }
 
     /**
@@ -132,14 +137,31 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $request->validate(['name' => 'required','email' => 'unique:users,email|required','department' => 'required','role' => 'required']);
+        $user->update($request->all());
+        return redirect()->route('user.settings',['userId'=>$user->id]);
+
+    }
+    public function updatepass(Request $request, User $user)
+    {
+        if(password_verify($request->current_password, $user->password)){
+            $user->password = $request['new_password'];
+            return redirect()->route('user.settings', ['userId' => $user->id]);
+        }else{
+            return redirect()->back()->with('error', 'The password is incorrect');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
-        //deleting account
+        if(password_verify($request->password, $user->password)){
+            $user->delete();
+            return redirect()->route('home', ['userId' => $user->id]);
+        }else{
+            return redirect()->back()->with('error', 'The password is incorrect');
+        }
     }
 }

@@ -21,6 +21,29 @@
 </head>
 
 <body class="antialiased bg-gray-50 text-gray-800 font-figtree min-h-screen">
+<div class="fixed top-20 right-5 z-[100] flex flex-col gap-3 w-80">
+    @if (session('error'))
+        <div id="toast-error"
+             class="toast-enter flex items-center w-full p-4 text-gray-500 bg-white rounded-lg shadow-xl border-l-4 border-red-500 transition-opacity duration-500 transform translate-x-0 opacity-100"
+             role="alert">
+            <div
+                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+                </svg>
+            </div>
+            <div class="ml-3 text-sm font-normal text-gray-900">{{ session('error') }}</div>
+            <button type="button" onclick="closeToast('toast-error')"
+                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
+        </div>
+    @endif
+</div>
 <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -34,7 +57,7 @@
                 </div>
 
                 <div class="hidden md:flex md:space-x-8">
-                    <a href="{{ route('user.dashboard', ['username' => Auth::user()->name]) }}"
+                    <a href="{{ route('user.dashboard', ['userId' => Auth::user()->id]) }}"
                        class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         Dashboard
                     </a>
@@ -75,7 +98,7 @@
 
                 <div class="flex items-center pl-4 border-l border-gray-100 space-x-3">
                     <div class="hidden md:flex flex-col items-end">
-                        <a href="{{ route('user.profile', ['username' => Auth::user()->name]) }}"
+                        <a href="{{ route('user.profile', ['userId' => Auth::user()->id]) }}"
                            class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition">
                             {{ Auth::user()->name }}
                         </a>
@@ -251,7 +274,7 @@
             <h3 class="text-xl font-bold text-gray-800">Personal Information</h3>
         </div>
 
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('user.update',Auth::user()) }}">
             @csrf
             @method('PUT')
 
@@ -326,7 +349,7 @@
             <h3 class="text-xl font-bold text-gray-800">Change Password</h3>
         </div>
 
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('user.updatepass',Auth::user()) }}">
             @csrf
             @method('PUT')
 
@@ -416,7 +439,7 @@
                 orders, and balance will be permanently deleted.
             </p>
 
-            <form method="POST" action="">
+            <form method="POST" action="{{ route('user.destroy',Auth::user()) }}">
                 @csrf
                 @method('DELETE')
 
@@ -491,6 +514,23 @@
             closeDeleteModal();
         }
     });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const toasts = document.querySelectorAll('[id^="toast-"]');
+
+        toasts.forEach(toast => {
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }, 3000);
+        });
+    });
+
 </script>
 
 </body>
