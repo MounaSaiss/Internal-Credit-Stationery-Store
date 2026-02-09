@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\Product;
-use App\Models\Order;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
  */
@@ -16,16 +16,12 @@ class OrderFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
-        $order = Order::inRandomOrder()->first();
-        $product = Product::inRandomOrder()->first();
-
-        return [
-            'user_id' => User::factory(),
-            'status' => 'approved',
-            'total_price' => fake()->numberBetween(50, 1000),
-            'code' => 'ORD-' . fake()->unique()->numberBetween(10000000, 999999999),
-        ];
-    }
+    public function definition(): array{
+    return [
+        'user_id' => User::factory(),
+        'status' => 'approved',
+        'total_price' => fake()->numberBetween(50, 1000),
+        'code' => 'ORD-' . fake()->unique()->numberBetween(10000000, 999999999),
+        ];}
 }
+

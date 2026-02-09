@@ -1,19 +1,14 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TechCorp - Boutique Interne</title>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
 </head>
-
 <body class="antialiased bg-gray-50 text-gray-800 font-figtree">
-
     <div
         class="relative min-h-screen flex flex-col justify-center items-center selection:bg-blue-500 selection:text-white">
 
@@ -21,7 +16,7 @@
             @if (Route::has('login'))
                 <div class="space-x-4">
                     @auth
-                        <a href="{{ url('/dashboard') }}"
+                        <a href="{{ route('user.dashboard',['userId' => Auth::user()->id]) }}"
                             class="font-semibold text-gray-600 hover:text-blue-600 focus:outline focus:outline-2 focus:rounded-sm focus:outline-blue-500">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}"

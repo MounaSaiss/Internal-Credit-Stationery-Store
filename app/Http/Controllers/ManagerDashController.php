@@ -9,27 +9,20 @@ class ManagerDashController extends Controller
 {
     public function ViewManagerdash()
     {
-        $managers = User::where('role', 'manager')
+       
+        $manager = auth()->user();
+
+        if (!$manager || $manager->role !== 'manager') {
+            abort(403);
+        }
+
+       
+        $employees = User::where('role', 'employee')
+            ->where('department', $manager->department)
             ->select('id', 'name', 'department')
             ->get();
 
-        $managersData = [];
-
-        foreach ($managers as $manager) {
-
-            $employees = User::where('role', 'employee')
-                ->where('department', $manager->department)
-                ->select('id', 'name', 'department')
-                ->get();
-
-            $managersData[] = [
-                'manager_id' => $manager->id,
-                'manager_name' => $manager->name,
-                'department' => $manager->department,
-                'employees' => $employees
-            ];
-        }
-
-        return view('managerDashboard', compact('managersData'));
+      
+        return view('managerDashboard', compact('manager', 'employees'));
     }
 }
