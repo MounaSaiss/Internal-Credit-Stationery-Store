@@ -15,7 +15,7 @@
             @if (Route::has('login'))
                 <div class="space-x-4">
                     @auth
-                        <a href="{{ route('user.dashboard',['username' => Auth::user()->name]) }}"
+                        <a href="{{ route('user.dashboard',['userId' => Auth::user()->id]) }}"
                             class="font-semibold text-gray-600 hover:text-blue-600 focus:outline focus:outline-2 focus:rounded-sm focus:outline-blue-500">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}"

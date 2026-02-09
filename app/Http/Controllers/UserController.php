@@ -9,15 +9,24 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function profile(request $request)
     {
-        $user = User::firstWhere('name', $request->username);
-        $orders = Order::with(['items.product'])->where('user_id', $user->id)->get();
+        $user = User::firstWhere('id', $request->userId);
+        $orders = Order::with(['items.product'])
+            ->where('user_id', $user->id)
+            ->get();
 
         return view('user.profile', compact('user', 'orders'));
+
+    }
+    public function settings(request $request)
+    {
+        $user = User::firstWhere('id', $request->userId);
+        $orders = Order::with(['items.product'])
+            ->where('user_id', $user->id)
+            ->get();
+
+        return view('user.profile-settings', compact('user', 'orders'));
 
     }
     public function purchases(Request $request)
@@ -25,33 +34,63 @@ class UserController extends Controller
         $orders = collect();
 
         if ($request->filled('order_id')) {
-            $order = Order::with('items.product')->where('code', $request->order_id)->first();
-            if ($order) {
-                $orders = collect([$order]);
-            }
+            $orders = Order::with('items.product')
+                ->where('code', $request->order_id)
+                ->paginate(2);
         } else {
-            $user = User::firstWhere('name', $request->username);
-
-            $orders = Order::with('items.product')->where('status', 'approved')->where('user_id', $user->id)->get();
+            $orders = Order::with('items.product')
+                ->where('status', 'approved')
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->paginate(2);
         }
+
 
         return view('user.purchases', compact('orders'));
     }
 
     public function orders()
     {
-        $orders = Order::with(['items.product'])->where('user_id', Auth::id())->latest()->paginate(2);
+        $orders = Order::with(['items.product'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(2);
 
         return view('user.orders', compact( 'orders'));
 
     }
+    public function search(Request $request, $value)
+    {
+        $query = Order::with(['items.product'])
+            ->where('user_id', Auth::id());
+
+        if ($request->type === 'orders') {
+            // search by order code
+            $query->where('code', 'LIKE', "%{$value}%");
+        } else {
+            // search by product name
+            $query->whereHas('items.product', function ($q) use ($value) {
+                $q->where('name', 'LIKE', "%{$value}%");
+            });
+        }
+
+        return response()->json($query->get());
+    }
+
 
     public function dashboard(request $request)
     {
-        $user = User::firstWhere('name', $request->username);
-        $ordertotal = Order::where('user_id', $user->id)->count();
-        $pendingOrders = Order::where('user_id', $user->id)->where('status', 'pending')->count();
-        $recentOrders = Order::where('user_id', $user->id)->with('items.product')->latest()->take(3)->get();
+        $user = User::firstWhere('id', $request->userId);
+        $ordertotal = Order::where('user_id', $user->id)
+            ->count();
+        $pendingOrders = Order::where('user_id', $user->id)->where('status', 'pending')
+            ->count();
+        $recentOrders = Order::where('user_id', $user->id)
+            ->orderBy('updated_at')
+            ->with('items.product')
+            ->latest()
+            ->take(3)
+            ->get();
         return view('user.dashboard', compact('user', 'ordertotal', 'pendingOrders', 'recentOrders'));
 
     }
@@ -61,7 +100,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        //gonna use this for comments
     }
 
     /**
@@ -69,7 +108,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //coments
     }
 
     /**
@@ -85,7 +124,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        //profile
     }
 
     /**
@@ -101,6 +140,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        //deleting account
     }
 }
