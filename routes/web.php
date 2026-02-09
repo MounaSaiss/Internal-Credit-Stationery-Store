@@ -15,6 +15,8 @@ use App\Http\Controllers\Manager\OrderController as ManagerOrderController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
 Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -24,7 +26,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{id}/update', [ProductController::class, 'update'])->name('products.update');
+    Route::post('/products/{id}/update', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}/delete', [ProductController::class, 'delete'])->name('products.destroy');
     Route::get('/dashboard/orders', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/dashboard/orders/{id}', [AdminController::class, 'show'])->name('admin.show');
@@ -43,6 +45,12 @@ Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::get('/user/purchases', [UserController::class, 'purchases'])->name('user.purchases');
     Route::get('/user/orders', [UserController::class, 'orders'])->name('user.orders');
     Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
+    Route::get('/user/profile/settings', [UserController::class, 'settings'])->name('user.settings');
+    Route::get('/user/orders/search/{value}', [UserController::class, 'search'])->name('user.orders');
+    Route::get('/user/purchases/search/{value}', [UserController::class, 'search'])->name('user.orders');
+    Route::put('/user/profile/settings/update{user}', [UserController::class, 'update'])->name('user.update');
+    Route::put('/user/profile/settings/updatepass{user}', [UserController::class, 'updatepass'])->name('user.updatepass');
+    Route::delete('/user/profile/settings/destroy{user}', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
 Route::middleware(['auth', 'role:manager'])->group(function () {
@@ -51,4 +59,4 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::post('/orders/{id}/reject', [ManagerOrderController::class, 'reject'])->name('orders.reject');
 });
 
-    
+

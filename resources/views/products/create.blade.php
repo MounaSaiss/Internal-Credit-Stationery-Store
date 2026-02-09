@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Add New Product</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="bg-gray-100 p-10">
