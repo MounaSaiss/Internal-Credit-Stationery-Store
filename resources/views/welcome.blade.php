@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
 </head>
 <body class="antialiased bg-gray-50 text-gray-800 font-figtree">
@@ -15,7 +16,7 @@
             @if (Route::has('login'))
                 <div class="space-x-4">
                     @auth
-                        <a href="{{ route('user.dashboard',['username' => Auth::user()->name]) }}"
+                        <a href="{{ route('user.dashboard',['userId' => Auth::user()->id]) }}"
                             class="font-semibold text-gray-600 hover:text-blue-600 focus:outline focus:outline-2 focus:rounded-sm focus:outline-blue-500">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}"
