@@ -5,12 +5,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* لتجنب تداخل تنسيقات Tailwind مع أزرار Bootstrap */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+        }
+    </style>
 </head>
 
-<body class="bg-light" style="font-family: 'Inter', sans-serif;">
+<body class="bg-light">
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="text-white font-bold text-sm">TC</span>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-gray-900">Products Store</span>
+                </div>
+
+                <div class="flex items-center gap-3">
+
+                    <a href="{{ route('products.create') }}"
+                        class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 font-bold rounded-lg transition-all text-sm no-underline">
+                        <span
+                            class="mr-2 bg-blue-200 text-blue-700 rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                            +
+                        </span>
+                        Nouveau Produit
+                    </a>
+
+                    <form method="POST" action="{{ route('logout') }}" class="ml-2 mb-0">
+                        @csrf
+                        <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition"
+                            title="Déconnexion">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="container py-5">
 
@@ -28,7 +78,6 @@
         </div>
 
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-
             <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
                 <h5 class="fw-bold m-0 text-dark">
                     <i class="fas fa-chart-pie me-2 text-primary"></i> Transactions Report
@@ -86,11 +135,13 @@
 
                                 <td>
                                     @foreach ($order->items as $item)
-                                        <div
-                                            class="bg-white border rounded px-2 py-1 mb-1 d-inline-block text-secondary small">
-                                            {{ $item->product->name }}
-                                        </div>
-                                        <br>
+                                        @if ($item->product)
+                                            <div
+                                                class="bg-white border rounded px-2 py-1 mb-1 d-inline-block text-secondary small">
+                                                {{ $item->product->name }}
+                                            </div>
+                                            <br>
+                                        @endif
                                     @endforeach
                                 </td>
 
@@ -122,7 +173,6 @@
             <div class="card-footer bg-white border-top p-4 d-flex justify-content-center">
                 {{ $orders->links('pagination::bootstrap-5') }}
             </div>
-
         </div>
     </div>
 

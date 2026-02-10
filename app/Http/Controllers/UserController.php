@@ -17,7 +17,6 @@ class UserController extends Controller
             ->get();
 
         return view('user.profile', compact('user', 'orders'));
-
     }
 
     public function orders()
@@ -28,7 +27,6 @@ class UserController extends Controller
             ->paginate(2);
 
         return view('user.orders', compact('orders'));
-
     }
 
     public function purchases(Request $request)
@@ -66,7 +64,9 @@ class UserController extends Controller
         return response()->json(
             Order::with(['items.product'])
                 ->where('user_id', Auth::id())
-                ->whereHas('items.product', fn($q) => $q->where('name', 'LIKE', "%{$value}%")
+                ->whereHas(
+                    'items.product',
+                    fn($q) => $q->where('name', 'LIKE', "%{$value}%")
                 )
                 ->get()
         );
@@ -87,7 +87,6 @@ class UserController extends Controller
             ->take(3)
             ->get();
         return view('user.dashboard', compact('user', 'ordertotal', 'pendingOrders', 'recentOrders'));
-
     }
 
     public function settings(request $request)
@@ -98,58 +97,35 @@ class UserController extends Controller
             ->get();
 
         return view('user.profile-settings', compact('user', 'orders'));
-
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //gonna use this for comments
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //profile
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, User $user)
     {
-        $request->validate(['name' => 'required', 'email' => 'unique:users,email|required', 'department' => 'required', 'role' => 'required']);
-        $user->update($request->all());
-        return redirect()->route('user.settings', ['userId' => $user->id]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'department' => 'required',
+            'role' => 'required'
+        ]);
 
+        $user->update($request->all());
+        return redirect()->route('user.settings', ['userId' => $user->id])
+            ->with('success', 'Profile updated successfully!');
     }
 
     public function updatepass(Request $request, User $user)
     {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
         if (password_verify($request->current_password, $user->password)) {
-            $user->password = $request['new_password'];
-            return redirect()->route('user.settings', ['userId' => $user->id]);
+            $user->update([
+                'password' => bcrypt($request->new_password)
+            ]);
+            return redirect()->route('user.settings', ['userId' => $user->id])
+                             ->with('success',"Password has been changed");
         } else {
             return redirect()->back()->with('error', 'The password is incorrect');
         }

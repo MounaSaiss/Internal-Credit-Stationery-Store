@@ -27,11 +27,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::post('/products/{id}/update', [ProductController::class, 'update'])->name('products.update');
+    Route::put('/products/{id}/update', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}/delete', [ProductController::class, 'delete'])->name('products.destroy');
     Route::get('/dashboard/orders', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/dashboard/orders/{id}', [AdminController::class, 'show'])->name('admin.show');
-    Route::get('/AdminStatdashboard', [AdminDashController::class, 'ViewAdmindash'])->name('dashboard');
 });
 
 
@@ -49,9 +48,9 @@ Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::get('/user/profile/settings', [UserController::class, 'settings'])->name('user.settings');
     Route::get('/user/orders/search/{value}', [UserController::class, 'searchOrders'])->name('user.orders');
     Route::get('/user/purchases/search/{value}', [UserController::class, 'searchPurchases'])->name('user.orders');
-    Route::put('/user/profile/settings/update{user}', [UserController::class, 'update'])->name('user.update');
-    Route::put('/user/profile/settings/updatepass{user}', [UserController::class, 'updatepass'])->name('user.updatepass');
-    Route::delete('/user/profile/settings/destroy{user}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::put('/user/profile/settings/update/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::put('/user/profile/settings/updatepass/{user}', [UserController::class, 'updatepass'])->name('user.updatepass');
+    Route::delete('/user/profile/settings/destroy/{user}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::get('/shop/product/search/{value}',[ShopController::class, 'search'])->name('shop.search');
 });
 
@@ -59,7 +58,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/orders/waiting', [ManagerOrderController::class, 'waiting'])->name('orders.waiting');
     Route::post('/orders/{id}/approve', [ManagerOrderController::class, 'approve'])->name('orders.approve');
     Route::post('/orders/{id}/reject', [ManagerOrderController::class, 'reject'])->name('orders.reject');
-    Route::get('/ManagerStatdashboard', [ManagerDashController::class, 'ViewManagerdash'])->name('managerDashboard');
+    Route::get('/manager/TeamStatistic', [ManagerDashController::class, 'viewManagerdash'])->name('manager.managerDashboard');
 });
 
 

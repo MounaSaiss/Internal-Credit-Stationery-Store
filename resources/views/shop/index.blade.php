@@ -90,7 +90,7 @@
                             Dashboard
                         </a>
                         <a href="{{ route('shop.index') }}"
-                           class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
                             Shop
                         </a>
                         <a href="{{ route('user.orders', ['userId' => Auth::user()->id]) }}"
@@ -102,6 +102,11 @@
                                 <a href="{{ route('orders.waiting', ['userId' => Auth::user()->id]) }}"
                                     class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                                     Pending orders
+                                </a>
+
+                                <a href="{{ route('manager.managerDashboard', ['userId' => Auth::user()->id]) }}"
+                                    class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                                    Team Statistic
                                 </a>
                             @endif
                         @endauth
@@ -244,80 +249,116 @@
         </div>
     </div>
 
-    <main class="max-w-7xl mx-auto px-4 pb-12">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id='product_carts'>
-            @foreach ($products as $product)
+
+
+   <main class="max-w-7xl mx-auto px-4 pb-12 pt-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id='product_carts'>
+        @foreach ($products as $product)
+            <div
+                class="group relative bg-white rounded-3xl border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden hover:border-blue-200">
+
+                <!-- Image Container -->
                 <div
-                    class="product-card group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-300 flex flex-col overflow-hidden relative">
-
+                    class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 group-hover:from-blue-50 group-hover:to-blue-100 transition-colors duration-300">
                     <a href="{{ route('shop.show', $product->id) }}"
-                        class="block relative h-48 bg-gray-50 overflow-hidden border-b border-gray-100">
-                        <div class="relative h-48 bg-gray-50 overflow-hidden border-b border-gray-100">
-                            @if ($product->image)
-                                <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            @else
-                                <div class="flex items-center justify-center h-full text-gray-300">
-                                    <svg class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
-                            @endif
-
-                            @if ($product->type === 'premium')
-                                <div
-                                    class="premium-badge absolute top-3 left-3 backdrop-blur-sm text-yellow-400 text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 fill-current"
-                                        viewBox="0 0 20 20">
-                                        <path
-                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    PREMIUM
-                                </div>
-                            @endif
-                        </div>
+                        class="block h-full focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-t-3xl">
+                        @if ($product->image)
+                            <img src="{{ asset('images/' . $product->image) }}"
+                                class="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-300"
+                                alt="{{ $product->name }}">
+                        @else
+                            <div class="flex items-center justify-center h-full text-gray-300">
+                                <svg class="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        @endif
                     </a>
 
-                    <div class="p-4 flex-1 flex flex-col">
-                        <div class="mb-3">
-                            <a href="{{ route('shop.show', $product->id) }}">
-                                <h3
-                                    class="text-base font-bold text-gray-900 mb-1 leading-tight hover:text-blue-600 transition-colors">
-                                    {{ $product->name }}</h3>
-                            </a>
-                            <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ $product->description }}</p>
-                        </div>
-
-                        <form action="{{ route('cart.add', $product->id) }}" method="POST"
-                            class="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between gap-3">
-                            @csrf
-
-                            <div class="flex flex-col">
-                                <span class="text-lg font-bold text-gray-900">{{ $product->price }}</span>
-                                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wide">Tokens</span>
-                            </div>
-
-                            <button type="submit"
-                                class="add-to-cart-btn bg-gray-900 hover:bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors shadow-sm flex items-center gap-2">
-                                <span>Add</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4" />
+                    <!-- Premium Badge -->
+                    @if ($product->type === 'premium')
+                        <div class="absolute top-4 left-4">
+                            <span
+                                class="bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-md flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
-                            </button>
-                        </form>
+                                Premium
+                            </span>
+                        </div>
+                    @endif
+
+                    <!-- Stock Badge -->
+                    <div class="absolute bottom-4 right-4">
+                        <div
+                            class="bg-white/95 backdrop-blur-sm shadow-lg border-2 {{ $product->stock < 5 ? 'border-red-200' : 'border-blue-200' }} px-4 py-2 rounded-xl">
+                            <span
+                                class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Stock:</span>
+                            <span
+                                class="text-base font-black ml-1 {{ $product->stock < 5 ? 'text-red-600' : 'text-blue-600' }}">
+                                {{ $product->stock }}
+                            </span>
+                        </div>
                     </div>
                 </div>
-            @endforeach
 
-        </div>
+                <!-- Card Content -->
+                <div class="p-6 flex flex-col flex-1 bg-gradient-to-b from-white to-gray-50">
+                    <!-- Product Info -->
+                    <div class="mb-4 flex-grow">
+                        <h3
+                            class="text-lg font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-200 mb-3">
+                            {{ $product->name }}
+                        </h3>
+                        <p class="text-sm text-gray-500 line-clamp-2 font-medium leading-relaxed">
+                            {{ $product->description }}
+                        </p>
+                    </div>
 
-        <div class="mt-12 flex justify-center">
+                    <!-- Price & Action -->
+                    <div class="mt-auto pt-4 border-t border-gray-100">
+                        <div class="flex items-end justify-between gap-4">
+                            <!-- Price -->
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-[10px] font-bold text-gray-400 uppercase tracking-[2px] mb-1">Price</span>
+                                <div class="flex items-baseline gap-1">
+                                    <span
+                                        class="text-3xl font-black text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+                                        {{ number_format($product->price) }}
+                                    </span>
+                                    <span class="text-sm font-bold text-gray-400">TK</span>
+                                </div>
+                            </div>
+
+                            <!-- Add to Cart Button -->
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-2xl font-bold text-sm transition-all duration-200 transform active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                                    <span>Add</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-16 flex justify-center">
+        <div class="bg-white px-6 py-4 rounded-2xl shadow-lg border border-gray-200">
             {{ $products->links() }}
         </div>
-    </main>
+    </div>
+</main>
+
 
     <script>
         function toggleDropdown() {
