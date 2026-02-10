@@ -51,6 +51,14 @@
                        class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         My Orders
                     </a>
+                    @auth
+                        @if (auth()->user()->role === 'manager')
+                            <a href="{{ route('orders.waiting', ['userId' => Auth::user()->id]) }}"
+                               class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                                Pending orders
+                            </a>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
@@ -406,7 +414,6 @@
 </main>
 
 <script>
-    // Dropdown toggle function
     function toggleDropdown() {
         const dropdown = document.getElementById('dropdownMenu');
         dropdown.classList.toggle('hidden');
@@ -416,7 +423,6 @@
         }
     }
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', function (event) {
         const dropdown = document.getElementById('profileDropdown');
         const dropdownMenu = document.getElementById('dropdownMenu');
@@ -426,7 +432,6 @@
         }
     });
 
-    // Balance counter animation
     function animateCounter(element, target, duration = 2000) {
         const start = 0;
         const increment = target / (duration / 16); // 60 FPS

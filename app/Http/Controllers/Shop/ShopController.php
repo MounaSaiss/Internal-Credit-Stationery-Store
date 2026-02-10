@@ -19,4 +19,10 @@ class ShopController extends Controller
         $product = Product::findOrFail($id);
         return view('shop.show', compact('product'));
     }
+
+    public function search($value)
+    {
+        $query = Product::where('name' , 'LIKE' , "%{$value}%");
+        return response()->json($query->get());
+    }
 }

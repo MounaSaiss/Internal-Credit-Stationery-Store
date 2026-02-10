@@ -46,6 +46,14 @@
                        class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                         My Orders
                     </a>
+                    @auth
+                        @if (auth()->user()->role === 'manager')
+                            <a href="{{ route('orders.waiting', ['userId' => Auth::user()->id]) }}"
+                               class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                                Pending orders
+                            </a>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
@@ -236,7 +244,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-gray-100" id="productsTableBody">
             @forelse ($orders as $order)
 
                 @forelse ($order->items as $item)
@@ -317,7 +325,86 @@
         if (!dropdown.contains(event.target) && !dropdownMenu.classList.contains('hidden')) {
             dropdownMenu.classList.add('hidden');
         }
-    });</script>
+    });
+    const searchInput = document.getElementById("searchInput");
+
+    searchInput.addEventListener("input", function (event) {
+        let value = event.target.value;
+        fetch(`/user/purchases/search/${value}`)
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+            .then(data => {
+                renderData(data);
+            })
+    });
+
+    const tableBody = document.getElementById("productsTableBody");
+
+    function renderData(data) {
+        tableBody.innerHTML = "";
+
+        if (data.length === 0) {
+            tableBody.innerHTML = `
+            <tr id="empty-state-row">
+                <td colspan="5" class="px-6 py-12 text-center text-gray-400">
+                    <div class="flex flex-col items-center">
+                        <span class="empty-icon text-4xl mb-2">🔍</span>
+                        <p class="text-gray-500">No products found matching your search.</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+            return;
+        }
+
+        data.forEach(order => {
+            order.items.forEach(item => {
+                const totalPrice = item.product.price * item.quantity;
+
+                tableBody.innerHTML += `
+                <tr class="hover:bg-gray-50 transition product-row"
+                    data-status="${order.status}"
+                    data-name="${item.product.name}"
+                    data-quantity="${item.quantity}"
+                    data-price="${totalPrice}"
+                    data-date="${order.updated_at}"
+                >
+                    <td class="p-5 font-bold text-gray-800 product-name">
+                        ${item.product.name}
+                    </td>
+
+                    <td class="p-5 text-gray-600">
+                        ${item.quantity}
+                    </td>
+
+                    <td class="p-5 text-sm text-gray-600">
+                        ${totalPrice}
+                        <span class="text-blue-500 font-semibold ml-1">tks</span>
+                    </td>
+
+                    <td class="p-5">
+                        <span class="text-sm font-medium px-2 py-1 rounded
+                            ${order.status === 'pending' ? 'text-yellow-600 bg-yellow-50' : ''}
+                            ${order.status === 'approved' ? 'text-green-600 bg-green-50' : ''}
+                            ${order.status === 'rejected' ? 'text-red-600 bg-red-50' : ''}">
+                            ${order.status}
+                        </span>
+                    </td>
+
+                    <td class="p-5 text-center">
+                        ${new Date(order.updated_at).toLocaleDateString()}
+                    </td>
+                </tr>
+            `;
+            });
+        });
+    }
+
+</script>
+
 <script src="{{ asset('js/member.js') }}"></script>
 
 </body>

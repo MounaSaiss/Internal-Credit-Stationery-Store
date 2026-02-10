@@ -27,7 +27,7 @@ class UserController extends Controller
             ->latest()
             ->paginate(2);
 
-        return view('user.orders', compact( 'orders'));
+        return view('user.orders', compact('orders'));
 
     }
 
@@ -51,23 +51,25 @@ class UserController extends Controller
         return view('user.purchases', compact('orders'));
     }
 
-
-    public function search(Request $request, $value)
+    public function searchOrders($value)
     {
-        $query = Order::with(['items.product'])
-            ->where('user_id', Auth::id());
+        return response()->json(
+            Order::with('items')
+                ->where('user_id', Auth::id())
+                ->where('code', 'LIKE', "%{$value}%")
+                ->get()
+        );
+    }
 
-        if ($request->type === 'orders') {
-            // search by order code
-            $query->where('code', 'LIKE', "%{$value}%");
-        } else {
-            // search by product name
-            $query->whereHas('items.product', function ($q) use ($value) {
-                $q->where('name', 'LIKE', "%{$value}%");
-            });
-        }
-
-        return response()->json($query->get());
+    public function searchPurchases($value)
+    {
+        return response()->json(
+            Order::with(['items.product'])
+                ->where('user_id', Auth::id())
+                ->whereHas('items.product', fn($q) => $q->where('name', 'LIKE', "%{$value}%")
+                )
+                ->get()
+        );
     }
 
 
@@ -137,17 +139,18 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $request->validate(['name' => 'required','email' => 'unique:users,email|required','department' => 'required','role' => 'required']);
+        $request->validate(['name' => 'required', 'email' => 'unique:users,email|required', 'department' => 'required', 'role' => 'required']);
         $user->update($request->all());
-        return redirect()->route('user.settings',['userId'=>$user->id]);
+        return redirect()->route('user.settings', ['userId' => $user->id]);
 
     }
+
     public function updatepass(Request $request, User $user)
     {
-        if(password_verify($request->current_password, $user->password)){
+        if (password_verify($request->current_password, $user->password)) {
             $user->password = $request['new_password'];
             return redirect()->route('user.settings', ['userId' => $user->id]);
-        }else{
+        } else {
             return redirect()->back()->with('error', 'The password is incorrect');
         }
     }
@@ -157,10 +160,10 @@ class UserController extends Controller
      */
     public function destroy(Request $request, User $user)
     {
-        if(password_verify($request->password, $user->password)){
+        if (password_verify($request->password, $user->password)) {
             $user->delete();
             return redirect()->route('home', ['userId' => $user->id]);
-        }else{
+        } else {
             return redirect()->back()->with('error', 'The password is incorrect');
         }
     }

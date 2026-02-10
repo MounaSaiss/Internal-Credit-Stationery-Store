@@ -24,4 +24,3 @@ class OrderFactory extends Factory
         'code' => 'ORD-' . fake()->unique()->numberBetween(10000000, 999999999),
         ];}
 }
-
