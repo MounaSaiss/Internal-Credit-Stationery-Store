@@ -89,6 +89,10 @@
                             class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                             Dashboard
                         </a>
+                        <a href="{{ route('shop.index') }}"
+                           class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            Shop
+                        </a>
                         <a href="{{ route('user.orders', ['userId' => Auth::user()->id]) }}"
                             class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                             My Orders
@@ -97,7 +101,7 @@
                             @if (auth()->user()->role === 'manager')
                                 <a href="{{ route('orders.waiting', ['userId' => Auth::user()->id]) }}"
                                     class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
-                                    Manager Requests
+                                    Pending orders
                                 </a>
                             @endif
                         @endauth
@@ -216,7 +220,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -226,9 +229,8 @@
         <div
             class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Catalogue Produits</h1>
-                <p class="text-sm text-gray-500 mt-1">Sélectionnez les équipements nécessaires pour votre département.
-                </p>
+                <h1 class="text-2xl font-bold text-gray-900">Product Catalog</h1>
+                <p class="text-sm text-gray-500 mt-1">Select the equipment needed for your department.</p>
             </div>
             <div class="relative w-full sm:w-64">
                 <input type="text" placeholder="Rechercher..." id='SearchProduct'
@@ -298,7 +300,7 @@
 
                             <button type="submit"
                                 class="add-to-cart-btn bg-gray-900 hover:bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors shadow-sm flex items-center gap-2">
-                                <span>Ajouter</span>
+                                <span>Add</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
