@@ -17,7 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
@@ -36,6 +35,26 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 
+Route::middleware(['auth', 'role:employee,manager'])->group(function () {
+    Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+    Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/store', [OrderController::class, 'store'])->name('order.store');
+    Route::get('/shop/product/{id}', [ShopController::class, 'show'])->name('shop.show');
+    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::get('/user/purchases', [UserController::class, 'purchases'])->name('user.purchases');
+    Route::get('/user/orders', [UserController::class, 'orders'])->name('user.orders');
+    Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
+    Route::get('/user/profile/settings', [UserController::class, 'settings'])->name('user.settings');
+    Route::get('/user/orders/search/{value}', [UserController::class, 'searchOrders'])->name('user.orders');
+    Route::get('/user/purchases/search/{value}', [UserController::class, 'searchPurchases'])->name('user.orders');
+    Route::put('/user/profile/settings/update{user}', [UserController::class, 'update'])->name('user.update');
+    Route::put('/user/profile/settings/updatepass{user}', [UserController::class, 'updatepass'])->name('user.updatepass');
+    Route::delete('/user/profile/settings/destroy{user}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/shop/product/search/{value}',[ShopController::class, 'search'])->name('shop.search');
+});
+
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/orders/waiting', [ManagerOrderController::class, 'waiting'])->name('orders.waiting');
     Route::post('/orders/{id}/approve', [ManagerOrderController::class, 'approve'])->name('orders.approve');
@@ -43,22 +62,5 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/ManagerStatdashboard', [ManagerDashController::class, 'ViewManagerdash'])->name('managerDashboard');
 });
 
-Route::middleware(['auth', 'role:employee,manager'])->group(function () {
-    Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
-    Route::post('/cart/add{id}', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/store' , [OrderController::class , 'store'])->name('order.store');
-    Route::get('/shop/product/{id}', [ShopController::class, 'show'])->name('shop.show');
-    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
-    Route::get('/user/profile/settings', [UserController::class, 'settings'])->name('user.settings');
-    Route::get('/user/purchases', [UserController::class, 'purchases'])->name('user.purchases');
-    Route::get('/user/orders', [UserController::class, 'orders'])->name('user.orders');
-    Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
-    Route::get('/user/orders/search/{value}', [UserController::class, 'search'])->name('user.orders');
-    Route::get('/user/purchases/search/{value}', [UserController::class, 'search'])->name('user.orders');
-    Route::put('/user/profile/settings/update{user}', [UserController::class, 'update'])->name('user.update');
-    Route::put('/user/profile/settings/updatepass{user}', [UserController::class, 'updatepass'])->name('user.updatepass');
-    Route::delete('/user/profile/settings/destroy{user}', [UserController::class, 'destroy'])->name('user.destroy');
-});
+
 
