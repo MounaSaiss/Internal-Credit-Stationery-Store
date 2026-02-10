@@ -16,11 +16,7 @@ use App\Http\Controllers\Manager\OrderController as ManagerOrderController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 071c699561c6d8db6871fee8b4164aa7bd6b42f1
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -40,11 +36,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 071c699561c6d8db6871fee8b4164aa7bd6b42f1
 Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
     Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
@@ -65,10 +57,7 @@ Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::get('/shop/product/search/{value}',[ShopController::class, 'search'])->name('shop.search');
 });
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 071c699561c6d8db6871fee8b4164aa7bd6b42f1
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/orders/waiting', [ManagerOrderController::class, 'waiting'])->name('orders.waiting');
     Route::post('/orders/{id}/approve', [ManagerOrderController::class, 'approve'])->name('orders.approve');
@@ -77,7 +66,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 });
 
 
-<<<<<<< HEAD
+
 Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
     Route::post('/cart/add{id}', [CartController::class, 'addToCart'])->name('cart.add');
@@ -96,7 +85,4 @@ Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::put('/user/profile/settings/updatepass{user}', [UserController::class, 'updatepass'])->name('user.updatepass');
     Route::delete('/user/profile/settings/destroy{user}', [UserController::class, 'destroy'])->name('user.destroy');
 });
-
-=======
->>>>>>> 071c699561c6d8db6871fee8b4164aa7bd6b42f1
 
