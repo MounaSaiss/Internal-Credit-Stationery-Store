@@ -406,7 +406,6 @@
 </main>
 
 <script>
-    // Dropdown toggle function
     function toggleDropdown() {
         const dropdown = document.getElementById('dropdownMenu');
         dropdown.classList.toggle('hidden');
@@ -416,7 +415,6 @@
         }
     }
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', function (event) {
         const dropdown = document.getElementById('profileDropdown');
         const dropdownMenu = document.getElementById('dropdownMenu');
@@ -426,7 +424,6 @@
         }
     });
 
-    // Balance counter animation
     function animateCounter(element, target, duration = 2000) {
         const start = 0;
         const increment = target / (duration / 16); // 60 FPS
