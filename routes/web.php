@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashController;
+use App\Http\Controllers\ManagerDashController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Auth::routes();
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -56,6 +58,8 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/orders/waiting', [ManagerOrderController::class, 'waiting'])->name('orders.waiting');
     Route::post('/orders/{id}/approve', [ManagerOrderController::class, 'approve'])->name('orders.approve');
     Route::post('/orders/{id}/reject', [ManagerOrderController::class, 'reject'])->name('orders.reject');
+    Route::get('/ManagerStatdashboard', [ManagerDashController::class, 'ViewManagerdash'])->name('managerDashboard');
 });
+
 
 
