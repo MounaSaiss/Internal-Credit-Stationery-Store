@@ -48,7 +48,13 @@ class OrderController extends Controller
         $products = $order->products;
         $order->update(['status' => 'rejected']);
         $user->token += $order->total_price;
-      
+        
+        foreach ($order->items as $item) {
+            $product = $item->product;
+            if ($product && $product->type === 'premium') {
+                $product->increment('stock', $item->quantity);
+            }
+        }
         $user->save();
 
         return redirect()->back()->with('success', 'Order rejected successfully');

@@ -15,8 +15,6 @@ use App\Http\Controllers\Manager\OrderController as ManagerOrderController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-//we should separate the models to independent entities like Admin, Manager and Employee
-
 
 Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
