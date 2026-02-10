@@ -34,10 +34,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const product_carts = document.getElementById('product_carts');
 
         product_carts.innerHTML = '';
-
+        if (data.length === 0) {
+            product_carts.innerHTML = `
+        <div class="col-span-full px-6 py-12 text-center text-gray-400">
+            <div class="flex flex-col items-center justify-center w-full">
+                <span class="empty-icon text-4xl mb-2">📦</span>
+                <p class="text-gray-500 text-lg">No products found.</p>
+                <p class="text-sm text-gray-400">Try adjusting your filters or search terms.</p>
+            </div>
+        </div>
+    `;
+            return;
+        }
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         console.log(csrfToken);
         console.log('test');
+
         data.forEach(product => {
             const showUrl = `/shop/product/${product.id}`;
             const cartUrl = `/cart/add/${product.id}`;
@@ -81,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
 
                         <form action="${cartUrl}" method="POST" class="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between gap-3">
-                            
+
                             <input type="hidden" name="_token" value="${csrfToken}">
 
                             <div class="flex flex-col">

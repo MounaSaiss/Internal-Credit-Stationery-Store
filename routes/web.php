@@ -45,8 +45,8 @@ Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::get('/user/orders', [UserController::class, 'orders'])->name('user.orders');
     Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
     Route::get('/user/profile/settings', [UserController::class, 'settings'])->name('user.settings');
-    Route::get('/user/orders/search/{value}', [UserController::class, 'search'])->name('user.orders');
-    Route::get('/user/purchases/search/{value}', [UserController::class, 'search'])->name('user.orders');
+    Route::get('/user/orders/search/{value}', [UserController::class, 'searchOrders'])->name('user.orders');
+    Route::get('/user/purchases/search/{value}', [UserController::class, 'searchPurchases'])->name('user.orders');
     Route::put('/user/profile/settings/update{user}', [UserController::class, 'update'])->name('user.update');
     Route::put('/user/profile/settings/updatepass{user}', [UserController::class, 'updatepass'])->name('user.updatepass');
     Route::delete('/user/profile/settings/destroy{user}', [UserController::class, 'destroy'])->name('user.destroy');

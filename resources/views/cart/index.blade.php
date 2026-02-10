@@ -10,7 +10,7 @@
 @endphp
 
     <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -99,7 +99,7 @@
             <div class="flex items-center space-x-4">
 
                 <div class="hidden lg:flex flex-col items-end border-r border-gray-200 pr-4">
-                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Solde Restant</span>
+                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Balance</span>
                     <span class="font-bold {{ $remainingBalance <= 0 ? 'text-red-600' : 'text-blue-600' }} text-base leading-tight">
                         {{ number_format($remainingBalance) }} <span class="text-xs opacity-70">Tks</span>
                     </span>
@@ -199,14 +199,14 @@
 <div class="bg-white border-b border-gray-200 mb-8 page-header">
     <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Mon Panier</h1>
-            <p class="text-sm text-gray-500 mt-1">Vérifiez vos articles avant de confirmer votre commande.</p>
+            <h1 class="text-2xl font-bold text-gray-900">My Cart</h1>
+            <p class="text-sm text-gray-500 mt-1">Review your items before confirming your order.</p>
         </div>
         <a href="{{ route('shop.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Continuer les achats
+            Continue shopping
         </a>
     </div>
 </div>
@@ -218,9 +218,9 @@
             <table class="w-full text-left table-header">
                 <thead class="bg-gray-50 text-gray-500 uppercase text-xs font-bold tracking-wider">
                 <tr>
-                    <th class="p-5">Produit</th>
-                    <th class="p-5">Prix Unitaire</th>
-                    <th class="p-5">Quantité</th>
+                    <th class="p-5">Product</th>
+                    <th class="p-5">Price</th>
+                    <th class="p-5">Quantity</th>
                     <th class="p-5">Total</th>
                     <th class="p-5 text-center">Action</th>
                 </tr>
@@ -254,7 +254,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
-                                    Retirer
+                                    Remove
                                 </button>
                             </form>
                         </td>
@@ -266,14 +266,14 @@
             <div class="cart-summary p-6 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div class="flex flex-col sm:flex-row items-center gap-4">
                     <div class="text-center sm:text-left">
-                        <div class="text-sm text-gray-500 uppercase font-bold tracking-wider mb-1">Total Commande</div>
+                        <div class="text-sm text-gray-500 uppercase font-bold tracking-wider mb-1">Total Price</div>
                         <div class="text-3xl font-bold text-gray-900">
                             {{ $total }} <span class="text-lg text-blue-600">Tokens</span>
                         </div>
                     </div>
                     <div class="h-12 w-px bg-gray-300 hidden sm:block"></div>
                     <div class="text-center sm:text-left">
-                        <div class="text-sm text-gray-500 uppercase font-bold tracking-wider mb-1">Solde Restant</div>
+                        <div class="text-sm text-gray-500 uppercase font-bold tracking-wider mb-1">Remaining Balance</div>
                         <div class="text-2xl font-bold {{ $remainingBalance <= 0 ? 'text-red-600' : 'text-green-600' }}">
                             {{ number_format($remainingBalance) }} <span class="text-sm opacity-70">Tks</span>
                         </div>
@@ -285,7 +285,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
-                        Confirmer la commande
+                        Confirm order
                     </button>
                 </form>
             </div>
@@ -294,14 +294,14 @@
         <div class="bg-white rounded-xl shadow-md border border-gray-200 p-12">
             <div class="text-center">
                 <div class="empty-icon text-6xl mb-4">🛒</div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Votre panier est vide</h2>
-                <p class="text-gray-500 mb-6">Parcourez notre catalogue et ajoutez des produits à votre panier.</p>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
+                <p class="text-gray-500 mb-6">Browse our catalog and add products to your cart.</p>
                 <a href="{{ route('shop.index') }}"
                    class="btn-ripple inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-bold shadow-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
-                    Commencer les achats
+                    Start shopping
                 </a>
             </div>
         </div>
