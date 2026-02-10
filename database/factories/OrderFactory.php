@@ -24,13 +24,4 @@ class OrderFactory extends Factory
         'code' => 'ORD-' . fake()->unique()->numberBetween(10000000, 999999999),
         ];}
 }
-    public function definition(): array
-    {
-        return [
-            'user_id' => User::factory(),
-            'status' => 'approved',
-            'total_price' => fake()->numberBetween(50, 1000),
-            'code' => 'ORD-' . fake()->unique()->numberBetween(10000000, 999999999),
-        ];
-    }
-}
+
