@@ -37,7 +37,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
-    Route::post('/cart/add{id}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/store', [OrderController::class, 'store'])->name('order.store');
@@ -52,6 +52,7 @@ Route::middleware(['auth', 'role:employee,manager'])->group(function () {
     Route::put('/user/profile/settings/update{user}', [UserController::class, 'update'])->name('user.update');
     Route::put('/user/profile/settings/updatepass{user}', [UserController::class, 'updatepass'])->name('user.updatepass');
     Route::delete('/user/profile/settings/destroy{user}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/shop/product/search/{value}',[ShopController::class, 'search'])->name('shop.search');
 });
 
 Route::middleware(['auth', 'role:manager'])->group(function () {

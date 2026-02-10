@@ -32,16 +32,17 @@
                         <span class="text-sm text-gray-500 font-medium">
                             Manager
                         </span>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-blue-50 text-blue-700 border border-blue-200">
                             {{ auth()->user()->department }} Department
                         </span>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <a href="{{ route('home') }}"
-                        class="px-3 py-2 text-gray-600 hover:text-gray-900 font-medium text-sm rounded-lg hover:bg-gray-100 transition">
-                        Dashboard
+                    <a href="{{ route('shop.index') }}"
+                        class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                        Shop
                     </a>
                 </div>
             </div>
@@ -72,20 +73,21 @@
 
         <!-- SUCCESS MESSAGE -->
         @if (session('success'))
-        <div class="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm flex items-center justify-between">
-            <div class="flex items-center">
-                <svg class="h-6 w-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p class="text-sm font-medium text-green-800">
-                    {{ session('success') }}
-                </p>
+            <div
+                class="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm flex items-center justify-between">
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="text-sm font-medium text-green-800">
+                        {{ session('success') }}
+                    </p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-green-600 hover:text-green-800">
+                    &times;
+                </button>
             </div>
-            <button onclick="this.parentElement.remove()" class="text-green-600 hover:text-green-800">
-                &times;
-            </button>
-        </div>
         @endif
 
         <!-- TABLE -->
@@ -103,54 +105,54 @@
 
                 <tbody class="divide-y divide-gray-100">
                     @forelse ($orders as $order)
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 font-medium text-gray-900">
-                            #{{ $order->id }}
-                        </td>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">
+                                #{{ $order->id }}
+                            </td>
 
-                        <td class="px-6 py-4 text-gray-700">
-                            {{ $order->user->name ?? 'N/A' }}
-                        </td>
+                            <td class="px-6 py-4 text-gray-700">
+                                {{ $order->user->name ?? 'N/A' }}
+                            </td>
 
-                        <td class="px-6 py-4 font-bold text-blue-600">
-                            {{ $order->total_price }} Token
-                        </td>
+                            <td class="px-6 py-4 font-bold text-blue-600">
+                                {{ $order->total_price }} Token
+                            </td>
 
-                        <td class="px-6 py-4">
-                            <span
-                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800">
-                                ⏳ Pending
-                            </span>
-                        </td>
+                            <td class="px-6 py-4">
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800">
+                                    ⏳ Pending
+                                </span>
+                            </td>
 
-                        <td class="px-6 py-4">
-                            <div class="flex justify-center gap-2">
+                            <td class="px-6 py-4">
+                                <div class="flex justify-center gap-2">
 
-                                <form method="POST" action="{{ route('orders.approve', $order->id) }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 border border-green-200 rounded-lg hover:bg-green-100 hover:border-green-300 transition text-sm font-medium">
-                                        ✅ Approve
-                                    </button>
-                                </form>
+                                    <form method="POST" action="{{ route('orders.approve', $order->id) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 border border-green-200 rounded-lg hover:bg-green-100 hover:border-green-300 transition text-sm font-medium">
+                                            ✅ Approve
+                                        </button>
+                                    </form>
 
-                                <form method="POST" action="{{ route('orders.reject', $order->id) }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="inline-flex items-center px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition text-sm font-medium">
-                                        ❌ Reject
-                                    </button>
-                                </form>
+                                    <form method="POST" action="{{ route('orders.reject', $order->id) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="inline-flex items-center px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition text-sm font-medium">
+                                            ❌ Reject
+                                        </button>
+                                    </form>
 
-                            </div>
-                        </td>
-                    </tr>
+                                </div>
+                            </td>
+                        </tr>
                     @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-                            Aucune commande en attente
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                Aucune commande en attente
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

@@ -48,10 +48,7 @@ class OrderController extends Controller
         $products = $order->products;
         $order->update(['status' => 'rejected']);
         $user->token += $order->total_price;
-        $products->each(function ($product) use ($order) {
-            $product->stock += $product->pivot->quantity;
-            $product->save();
-        });
+      
         $user->save();
 
         return redirect()->back()->with('success', 'Order rejected successfully');
