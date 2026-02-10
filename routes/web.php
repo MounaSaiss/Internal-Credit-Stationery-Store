@@ -58,7 +58,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/orders/waiting', [ManagerOrderController::class, 'waiting'])->name('orders.waiting');
     Route::post('/orders/{id}/approve', [ManagerOrderController::class, 'approve'])->name('orders.approve');
     Route::post('/orders/{id}/reject', [ManagerOrderController::class, 'reject'])->name('orders.reject');
-    Route::get('/ManagerStatdashboard', [ManagerDashController::class, 'ViewManagerdash'])->name('managerDashboard');
+    Route::get('/manager/TeamStatistic', [ManagerDashController::class, 'viewManagerdash'])->name('manager.managerDashboard');
 });
 
 

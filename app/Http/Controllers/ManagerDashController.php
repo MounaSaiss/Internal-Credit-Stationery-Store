@@ -4,25 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ManagerDashController extends Controller
 {
-    public function ViewManagerdash()
+    public function viewManagerdash()
     {
-       
-        $manager = auth()->user();
+        $manager = Auth::user();
 
-        if (!$manager || $manager->role !== 'manager') {
-            abort(403);
-        }
-
-       
         $employees = User::where('role', 'employee')
             ->where('department', $manager->department)
-            ->select('id', 'name', 'department')
+            ->withCount('orders')
+            // ->select('id', 'name', 'department', 'email', 'role', 'token')
             ->get();
 
-      
-        return view('managerDashboard', compact('manager', 'employees'));
+        return view('manager.managerDashboard', compact('manager', 'employees'));
     }
 }
