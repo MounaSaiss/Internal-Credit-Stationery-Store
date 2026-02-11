@@ -23,11 +23,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        body {
-            font-family: 'Figtree', sans-serif;
-        }
-    </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800 antialiased">
