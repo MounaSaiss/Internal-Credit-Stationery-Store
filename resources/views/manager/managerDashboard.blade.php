@@ -13,14 +13,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>My Profile</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 
-<body class="antialiased bg-gray-50 text-gray-800 font-figtree h-[100vh]">
+<body class="bg-slate-50">
+
     <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -40,10 +46,10 @@
                             Dashboard
                         </a>
                         <a href="{{ route('shop.index') }}"
-                            class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
+                            class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
                             Shop
                         </a>
-                        <a href="{{ route('user.orders') }}"
+                        <a href="{{ route('user.orders', ['userId' => Auth::user()->id]) }}"
                             class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium transition">
                             My Orders
                         </a>
@@ -62,7 +68,6 @@
                         @endauth
                     </div>
                 </div>
-
                 <div class="flex items-center space-x-4">
 
                     <div class="hidden lg:flex flex-col items-end border-r border-gray-200 pr-4">
@@ -174,6 +179,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                 </div>
@@ -181,246 +187,125 @@
         </div>
     </nav>
 
-    @if (session('success'))
-        <div id="success-message"
-            class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 shadow-md rounded" role="alert">
-            <div class="flex items-center">
-                <div class="py-1">
-                    <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
-                    </svg>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+
+        <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-center justify-between shadow-sm mb-8">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-100 text-blue-600 p-2 rounded-lg">
+                    <i class="fas fa-id-badge text-xl"></i>
                 </div>
                 <div>
-                    <p class="font-bold">Success!</p>
-                    <p class="text-sm">{{ session('success') }}</p>
+                    <span class="text-sm text-slate-500 block uppercase font-bold tracking-wider">Department</span>
+                    <span class="text-xl font-bold text-slate-800">{{ $manager->department }}</span>
+                </div>
+            </div>
+            <div class="hidden md:block">
+                <span class="bg-blue-50 text-blue-700 px-4 py-2 rounded-full font-bold text-sm border border-blue-100">
+                    <i class="fas fa-users mr-2"></i> {{ $employees->count() }} Employees
+                </span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-list-ul text-purple-500"></i>
+                    Employee Information
+                </h2>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-widest border-b">
+                                <th class="px-8 py-5 font-bold">Employee</th>
+                                <th class="px-8 py-5 font-bold">Contact Info</th>
+                                <th class="px-8 py-5 font-bold text-center">Role</th>
+                                <th class="px-8 py-5 font-bold text-center">Tokens</th>
+                                <th class="px-8 py-5 font-bold text-center">Total Orders</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                            @forelse ($employees as $emp)
+                                <tr class="hover:bg-slate-50/80 transition-all group">
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-4">
+                                            <div
+                                                class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center font-bold shadow-sm group-hover:scale-110 transition-transform">
+                                                {{ strtoupper(substr($emp->name, 0, 1)) }}
+                                            </div>
+                                            <div>
+                                                <span
+                                                    class="block font-bold text-slate-800 text-base leading-tight">{{ $emp->name }}</span>
+                                                <span class="text-xs text-slate-400 font-medium tracking-wide">ID:
+                                                    #{{ $emp->id }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-2 text-slate-600">
+                                            <i class="far fa-envelope text-slate-300"></i>
+                                            <span class="font-medium">{{ $emp->email }}</span>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-8 py-5 text-center">
+                                        <span
+                                            class="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black uppercase tracking-tighter border border-slate-200">
+                                            {{ $emp->role }}
+                                        </span>
+                                    </td>
+
+                                    <td class="px-8 py-5 text-center">
+                                        <div
+                                            class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 px-3 py-1 rounded-full border border-amber-100">
+                                            <i class="fas fa-coins text-[10px]"></i>
+                                            <span
+                                                class="font-black text-sm">{{ number_format($emp->token ?? 0) }}</span>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-8 py-5 text-center">
+                                        <div
+                                            class="inline-flex items-center gap-2 bg-slate-100/50 border border-slate-200 px-3 py-1 rounded-xl transition-all duration-200 group-hover:border-indigo-200 group-hover:bg-indigo-50/50">
+                                            <i
+                                                class="fas fa-shopping-cart text-[10px] text-slate-400 group-hover:text-indigo-500 transition-colors"></i>
+
+                                            <span
+                                                class="text-sm font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">
+                                                {{ $emp->orders_count ?? 0 }}
+                                            </span>
+
+                                            <span
+                                                class="text-[9px] font-semibold uppercase tracking-tighter text-slate-400 group-hover:text-indigo-400">
+                                                Orders
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-8 py-20 text-center">
+                                        <div class="max-w-xs mx-auto">
+                                            <div
+                                                class="w-16 h-16 bg-slate-100 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <i class="fas fa-users-slash text-2xl"></i>
+                                            </div>
+                                            <h3 class="text-slate-800 font-bold text-lg leading-tight">No staff members
+                                            </h3>
+                                            <p class="text-slate-500 text-sm mt-1 text-balance">There are no employees
+                                                assigned to the {{ $manager->department }} department yet.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    @endif
-
-    <div class="bg-white border-b border-gray-200 mb-8 page-header">
-        <div
-            class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">My Purchased Products</h1>
-                <p class="text-sm text-gray-500 mt-1">Track and manage your order history.</p>
-            </div>
-            <div class="relative w-full sm:w-64">
-                <input type="text" id="searchInput" placeholder="Search products..."
-                    class="search-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                <svg class="search-icon w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </div>
-        </div>
-    </div>
-
-    <main class="max-w-7xl mx-auto px-4 pb-12">
-        <div class="table-section bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-            <table class="w-full text-left" id="productsTable">
-                <thead class="bg-gray-50 text-gray-500 uppercase text-xs font-bold tracking-wider">
-                    <tr>
-                        <th class="p-5">
-                            <button class="sort-header flex items-center gap-2 hover:text-gray-700 transition"
-                                data-sort="name">
-                                Product Name
-                                <span class="sort-arrow">↕</span>
-                            </button>
-                        </th>
-                        <th class="p-5">
-                            <button class="sort-header flex items-center gap-2 hover:text-gray-700 transition"
-                                data-sort="quantity">
-                                Quantity
-                                <span class="sort-arrow">↕</span>
-                            </button>
-                        </th>
-                        <th class="p-5">
-                            <button class="sort-header flex items-center gap-2 hover:text-gray-700 transition"
-                                data-sort="price">
-                                Price
-                                <span class="sort-arrow">↕</span>
-                            </button>
-                        </th>
-                        <th class="p-5">
-                            <button class="sort-header flex items-center gap-2 hover:text-gray-700 transition"
-                                data-sort="status">
-                                Status
-                                <span class="sort-arrow">↕</span>
-                            </button>
-                        </th>
-                        <th class="p-5 text-center">
-                            <button class="sort-header flex items-center gap-2 hover:text-gray-700 transition mx-auto"
-                                data-sort="date">
-                                Date
-                                <span class="sort-arrow">↕</span>
-                            </button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100" id="productsTableBody">
-                    @forelse ($orders as $order)
-
-                        @forelse ($order->items as $item)
-                            <tr class="hover:bg-gray-50 transition product-row" data-status="{{ $order->status }}"
-                                data-name="{{ $item->product->name }}" data-quantity="{{ $item->quantity }}"
-                                data-price="{{ $item->product->price * $item->quantity }}"
-                                data-date="{{ $order->updated_at }}">
-                                <td class="p-5 font-bold text-gray-800">
-                                    {{ $item->product->name }}
-                                </td>
-
-                                <td class="p-5 text-gray-600">
-                                    {{ $item->quantity }}
-                                </td>
-
-                                <td class="p-5 text-sm text-gray-600">
-                                    {{ $item->product->price * $item->quantity }}
-                                    <span class="text-blue-500 font-semibold ml-1">tks</span>
-                                </td>
-
-                                <td class="p-5">
-                                    <span @class([
-                                        'status-badge text-sm font-medium px-2 py-1 rounded',
-                                        'text-yellow-600 bg-yellow-50' => $order->status === 'pending',
-                                        'text-green-600 bg-green-50' => $order->status === 'approved',
-                                        'text-red-600 bg-red-50' => $order->status === 'rejected',
-                                    ])>
-                                        {{ $order->status }}
-                                    </span>
-                                </td>
-
-                                <td class="p-5 text-center">
-                                    {{ $order->updated_at }}
-                                </td>
-                            </tr>
-
-                        @empty
-                            {{-- order exists but has NO items --}}
-                        @endforelse
-
-                    @empty
-                        {{-- user has NO orders --}}
-                        <tr id="emptyRow">
-                            <td colspan="5" class="p-10 text-center text-gray-400 italic">
-                                <div class="flex flex-col items-center">
-                                    <span class="empty-icon text-4xl mb-2">🛒</span>
-                                    <p>You haven't bought any products recently.</p>
-                                    <a href="{{ route('shop.index') }}"
-                                        class="text-blue-600 text-sm hover:underline mt-2">Browse Catalog</a>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-
-        </div>
-        <div class="table-section mt-12 flex justify-center">
-            {{ $orders->links() }}
-        </div>
-    </main>
-    <script>
-        function toggleDropdown() {
-            const dropdown = document.getElementById('dropdownMenu');
-            dropdown.classList.toggle('hidden');
-
-            if (!dropdown.classList.contains('hidden')) {
-                dropdown.classList.add('dropdown-enter');
-            }
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('profileDropdown');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-
-            if (!dropdown.contains(event.target) && !dropdownMenu.classList.contains('hidden')) {
-                dropdownMenu.classList.add('hidden');
-            }
-        });
-        const searchInput = document.getElementById("searchInput");
-
-        searchInput.addEventListener("input", function(event) {
-            let value = event.target.value;
-            fetch(`/user/purchases/search/${value}`)
-                .then(res => {
-                    if (res.ok) {
-                        return res.json();
-                    }
-                })
-                .then(data => {
-                    renderData(data);
-                })
-        });
-
-        const tableBody = document.getElementById("productsTableBody");
-
-        function renderData(data) {
-            tableBody.innerHTML = "";
-
-            if (data.length === 0) {
-                tableBody.innerHTML = `
-            <tr id="empty-state-row">
-                <td colspan="5" class="px-6 py-12 text-center text-gray-400">
-                    <div class="flex flex-col items-center">
-                        <span class="empty-icon text-4xl mb-2">🔍</span>
-                        <p class="text-gray-500">No products found matching your search.</p>
-                    </div>
-                </td>
-            </tr>
-        `;
-                return;
-            }
-
-            data.forEach(order => {
-                order.items.forEach(item => {
-                    const totalPrice = item.product.price * item.quantity;
-
-                    tableBody.innerHTML += `
-                <tr class="hover:bg-gray-50 transition product-row"
-                    data-status="${order.status}"
-                    data-name="${item.product.name}"
-                    data-quantity="${item.quantity}"
-                    data-price="${totalPrice}"
-                    data-date="${order.updated_at}"
-                >
-                    <td class="p-5 font-bold text-gray-800 product-name">
-                        ${item.product.name}
-                    </td>
-
-                    <td class="p-5 text-gray-600">
-                        ${item.quantity}
-                    </td>
-
-                    <td class="p-5 text-sm text-gray-600">
-                        ${totalPrice}
-                        <span class="text-blue-500 font-semibold ml-1">tks</span>
-                    </td>
-
-                    <td class="p-5">
-                        <span class="text-sm font-medium px-2 py-1 rounded
-                            ${order.status === 'pending' ? 'text-yellow-600 bg-yellow-50' : ''}
-                            ${order.status === 'approved' ? 'text-green-600 bg-green-50' : ''}
-                            ${order.status === 'rejected' ? 'text-red-600 bg-red-50' : ''}">
-                            ${order.status}
-                        </span>
-                    </td>
-
-                    <td class="p-5 text-center">
-                        ${new Date(order.updated_at).toLocaleDateString()}
-                    </td>
-                </tr>
-            `;
-                });
-            });
-        }
-    </script>
-
-    <script src="{{ asset('js/member.js') }}"></script>
 
 </body>
 
